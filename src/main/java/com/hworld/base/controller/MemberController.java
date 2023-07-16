@@ -329,7 +329,7 @@ public class MemberController {
 	
 	// 로그아웃(Get)
 	@GetMapping("logout")
-	public String logout(HttpServletRequest request) throws Exception {
+	public String getMemberLogout(HttpServletRequest request) throws Exception {
 		
 		HttpSession session = request.getSession();
 		

@@ -99,7 +99,8 @@
                                                 </thead>
                                                 <tbody>
                                                 	<c:forEach var="member" items="${phoneList}">
-														<c:forEach var="telephonVOs" items="${member.telephoneVOs}">
+													<c:forEach var="telephonVOs" items="${member.telephoneVOs}">
+													<%-- <c:forEach var="planVOs" items="${member.planVOs}"> --%>
 	                                                    <tr>
 	                                                    	<td><b>${member.memberNum}</b></td>
 	                                                    	
@@ -107,8 +108,8 @@
 	                                                        
 	                                                        <td>${telephonVOs.phoneNum}</td>
 	
-	                                                        <td>${telephonVOs.planNum}</td>
-	
+	                                                        <td>${planVOs.planName}</td>
+														
 	                                                        <td>${telephonVOs.directName}</td>
 	
 	                                                        <!-- <td>타회사</td> -->
@@ -138,8 +139,9 @@
 	                                                           	</c:if>
 	                                                        </td>
 	                                                    </tr>
-	                                                    </c:forEach>
+	                                                </c:forEach>
 													</c:forEach>
+													<%-- </c:forEach> --%>
                                                 </tbody>
                                             </table>
                                         </div>

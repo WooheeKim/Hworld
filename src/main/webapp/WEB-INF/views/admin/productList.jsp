@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="ko" dir="ltr">
 
@@ -83,14 +84,17 @@
 	                                                           	</c:if>	                                                            
 	                                                        </td>
 	
-	                                                        <td >
+	                                                        <td>
 	                                                            <!-- <div class="mx-auto col-lg-3">
 	                                                                <input class="form-control" type="number" value="">
 	                                                            </div> -->
 	                                                            ${directVO.directStock}
 	                                                        </td>
 																														
-	                                                        <td class="td-price">${directVO.directPrice}</td>		                                                       
+	                                                        <%-- <td class="td-price">${directVO.directPrice}</td> --%>
+	                                                        <td>	                                                        	
+	                                                        	<fmt:formatNumber value="${directVO.directPrice}" pattern="###,###,###,###원"/>
+	                                                        </td>
 	                                                    </tr>		                                                    
                                                     </c:forEach>
                                                 </tbody>
@@ -136,6 +140,7 @@
             </div>
         </div>
     </div>
+    
     <!-- page-wrapper End-->
 
     <!-- latest js -->

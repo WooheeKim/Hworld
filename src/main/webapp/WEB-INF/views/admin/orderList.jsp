@@ -82,7 +82,7 @@
 	                                                            <b><a href="orderDetail?orderNum=${order.orderNum}">${order.orderNum}</a></b>
 	                                                        </td>
 
-	                                                        <td>${memberVOs.name}</td>
+	                                                        <td>${memberVOs.email}</td>
 	                                                        
 	                                                        <td>
 		                                                        <fmt:formatDate value="${order.orderDate}" pattern="yyyy/MM/dd" var="formattedDate" />

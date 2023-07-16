@@ -17,13 +17,17 @@
                 <div class="title-header title-header-1">
                     
                     <h5>미납 목록</h5>
-                    <div class="col-lg-6 col-md-8 mx-6">
+                    <div class="col-lg-6 col-md-8 mx-6 d-flex justify-content-end">
                         <div class="search-bar">
                             <div class="input-group search-bar w-100">
-                                <input type="search" class="form-control" placeholder="Search">
-                                <button class="input-group-text" id="basic-addon3">
-                                    <i class="fas fa-search"></i>
-                                </button>
+                            	<form action="./unpaidList" method="get">
+	                            	<div class="d-inline-flex input-group search-bar" style="width: 750px">
+		                                <input type="search" name="search" value="${pager.search}" class="form-control" placeholder="Search : 미납번호, 회원번호">
+		                                <button class="input-group-text" id="basic-addon3">
+		                                    <i class="fas fa-search"></i>
+		                                </button>
+		                            </div>
+		                        </form>
                             </div>
                         </div>
                     </div>
@@ -69,7 +73,7 @@
                                     <nav class="ms-auto me-auto " aria-label="...">
 						                <ul class="pagination pagination-primary">
 						                    <li class="page-item ${pager.pre ? '' : 'disabled' }">
-						                        <a class="page-link" href="memberList?page=${pager.startNum-1}&search=${pager.search}" aria-label="Previous">
+						                        <a class="page-link" href="unpaidList?page=${pager.startNum-1}&search=${pager.search}" aria-label="Previous">
 						                            <span aria-hidden="true">
 						                                <i class="fas fa-chevron-left"></i>
 						                            </span>
@@ -77,11 +81,11 @@
 						                    </li>
 						                    <c:forEach begin="${pager.startNum}" end="${pager.lastNum}" var="i">
 						   	                    <li class="page-item">
-						                        	<a class="page-link" href="memberList?page=${i}&search=${pager.search}">${i}</a>
+						                        	<a class="page-link" href="unpaidList?page=${i}&search=${pager.search}">${i}</a>
 						                    	</li>
 						                    </c:forEach>
 						                    <li class="page-item ${pager.next ? '' : 'disabled' }">
-						                        <a class="page-link" href="memberList?page=${pager.lastNum+1}&search=${pager.search}" aria-label="Next">
+						                        <a class="page-link" href="unpaidList?page=${pager.lastNum+1}&search=${pager.search}" aria-label="Next">
 						                            <span aria-hidden="true">
 						                                <i class="fas fa-chevron-right"></i>
 						                            </span>

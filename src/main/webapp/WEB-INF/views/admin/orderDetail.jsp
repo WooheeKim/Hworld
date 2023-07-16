@@ -27,8 +27,8 @@
                                 <fmt:formatDate value="${orderVO.orderDate}" pattern="yyyy/MM/dd" var="formattedDate" />
                                 <span style="font-weight:400;">${formattedDate}</span>
                             </li>
-	                                                 
-                            <li>총 가격 ${orderVO.orderFinalPrice}</li>
+	                                                                             
+                            <li>총 금액 <fmt:formatNumber value="${directVOs.directPrice * orderDirectVOs.orderAmount}" pattern="###,###,###,###원"/></li>
                         </ul>
                     </div>
                 </div>
@@ -55,36 +55,38 @@
 
                                                         <tbody>
                                                             <tr class="table-order">
-                                                                <td>
-                                                                    <!-- <a href="javascript:void(0)">
+                                                                <!-- <td>
+                                                                    <a href="javascript:void(0)">
                                                                         <img src="/admin/images/profile/1.jpg"
                                                                             class="img-fluid blur-up lazyload" alt="">
-                                                                    </a> -->
-                                                                </td>
-                                                                <td>
+                                                                    </a>
+                                                                </td> -->
+                                                                <th></th>
+                                                                <th>
                                                                     <p>제품명</p>
+                                                                    <input type="hidden" class="individual_productName_input" value="${directVOs.directName}">
                                                                     <h5>${directVOs.directName}</h5>
-                                                                </td>
-                                                                <td>
+                                                                </th>
+                                                                <th>
                                                                     <p>수량</p>
+                                                                    <input type="hidden" class="individual_productName_input2" value="${orderDirectVOs.orderAmount}">
                                                                     <h5>${orderDirectVOs.orderAmount}</h5>
-                                                                </td>
-                                                                <td>
-                                                                    <p>가격</p>
-                                                                    <h5>${directVOs.directPrice * orderDirectVOs.orderAmount}</h5>
-                                                                </td>
-                                                                <td>
-                                                                </td>
+                                                                </th>
+                                                                <th>
+                                                                    <p>금액</p>
+                                                                    <h5><fmt:formatNumber value="${directVOs.directPrice * orderDirectVOs.orderAmount}" pattern="###,###,###,###원"/></h5>
+                                                                    <input type="hidden" class="individual_productName_input3" value="${directVOs.directPrice * orderDirectVOs.orderAmount}">                                                                    
+                                                                </th>
+                                                                <th></th>
                                                             </tr>                                                            
-                                                        </tbody>
-
+                                                        </tbody>																											
                                                         <tfoot>                                                            
                                                             <tr class="table-order">
                                                                 <td colspan="3">
-                                                                    <h4 class="theme-color fw-bold">총 액 :</h4>
+                                                                    <h4 class="theme-color fw-bold">총 금액 :</h4>
                                                                 </td>
-                                                                <td>
-                                                                    <h4 class="theme-color fw-bold">$6935.00</h4>
+                                                                <td>                                                                	
+                                                                    <h4 class="theme-color fw-bold"><fmt:formatNumber value="${directVOs.directPrice * orderDirectVOs.orderAmount}" pattern="###,###,###,###원"/></h4>
                                                                 </td>
                                                             </tr>
                                                         </tfoot>
@@ -97,12 +99,12 @@
                                                     <div class="row g-4">
                                                         <h4>주문 내역</h4>
                                                         <ul class="order-details">
-                                                            <li>주문 번호: ${orderVO.orderNum}</li>
+                                                            <li>주문 번호 : ${orderVO.orderNum}</li>
                                                             <li>
 								                                <fmt:formatDate value="${orderVO.orderDate}" pattern="yyyy/MM/dd" var="formattedDate" />
-								                                <span style="font-weight:400;">주문 날짜: ${formattedDate}</span>
+								                                <span style="font-weight:400;">주문 날짜 : ${formattedDate}</span>
 								                            </li>
-                                                            <li>주문 가격: ${orderVO.orderFinalPrice}</li>
+                                                            <li>주문 금액 : <fmt:formatNumber value="${directVOs.directPrice * orderDirectVOs.orderAmount}" pattern="###,###,###,###원"/></li>
                                                         </ul>
 
                                                         <h4>배송지</h4>
@@ -112,9 +114,10 @@
                                                             <li>${orderVO.orderAddress3}</li>
                                                         </ul>
 
-                                                        <h4>받는이 【연락처】</h4>
+                                                        <h4>받는이 정보</h4>
                                                         <ul class="order-details">
-                                                        	<li>${orderVO.orderReceiver} 【 ${orderVO.orderTelNum} 】</li>
+                                                        	<li>이름 : ${orderVO.orderReceiver}</li>
+                                                        	<li>연락처 : ${orderVO.orderTelNum}</li>
                                                         </ul>
                                                         
                                                         

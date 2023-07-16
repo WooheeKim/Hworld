@@ -63,6 +63,12 @@
 		SELECT * FROM MEMBER
 		WHERE EMAIL = #{email}
 	</select>
+
+	
+	<update id="login" parameterType="MemberVO">
+		UPDATE MEMBER SET LASTTIME = NOW()
+		WHERE EMAIL = #{email}
+	</update>
 	
 	<!-- 이메일 찾기 -->
 <!-- 	<select id="emailSearch" parameterType="MemberVO" resultType="MemberVO">

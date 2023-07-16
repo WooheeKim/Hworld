@@ -7,7 +7,8 @@
 	
 	<!-- 회원목록 -->
 	<select id="memberList" parameterType="Pager" resultType="MemberVO">
-		SELECT MEMBERNUM, NAME, TEL, EMAIL, RRNF, ADDRESS1, ADDRESS2, ADDRESS3, JOINDATE, MEMBERSTATE FROM MEMBER
+		SELECT MEMBERNUM, NAME, TEL, EMAIL, RRNF, ADDRESS1, ADDRESS2, ADDRESS3, JOINDATE, MEMBERSTATE, LASTTIME 
+		FROM MEMBER
 		<include refid="searchMemberList"></include>
 		ORDER BY MEMBERNUM DESC
 		LIMIT #{startRow}, #{perPage}
@@ -24,18 +25,34 @@
 	
 	<!-- 회선목록 -->
 	<select id="phoneList" parameterType="Pager" resultMap="TelephoneListResult">
-		SELECT M.MEMBERNUM, M.EMAIL, T.PHONENUM, T.PLANNUM, T.DIRECTNAME, T.STARTDATE, T.ENDDATE, M.MEMBERSTATE 
+		SELECT DISTINCT M.MEMBERNUM, M.EMAIL, T.PHONENUM, P.*, T.PLANNUM, T.DIRECTNAME, T.STARTDATE, T.ENDDATE, M.MEMBERSTATE 
 		FROM MEMBER M
-		INNER JOIN TELEPHONE T
+		JOIN TELEPHONE T
  		ON(M.MEMBERNUM = T.MEMBERNUM)
+ 		INNER JOIN PLAN P
+ 		ON(P.PLANNUM = T.PLANNUM)
 		<include refid="searchTelephoneList"></include>
-		ORDER BY MEMBERNUM DESC
+ 		ORDER BY MEMBERNUM DESC
 		LIMIT #{startRow}, #{perPage}
+		
+		<!-- SELECT DISTINCT M.MEMBERNUM, M.EMAIL, T.PHONENUM, P.*, T.PLANNUM, T.DIRECTNAME, T.STARTDATE, T.ENDDATE, M.MEMBERSTATE 
+		FROM MEMBER M
+		JOIN TELEPHONE T
+ 		ON(M.MEMBERNUM = T.MEMBERNUM)
+ 		INNER JOIN PLAN P
+ 		ON(P.PLANNUM = T.PLANNUM)
+		<include refid="searchTelephoneList"></include>
+ 		ORDER BY MEMBERNUM DESC
+		LIMIT #{startRow}, #{perPage} -->
 	</select>
 	<resultMap type="MemberVO" id="TelephoneListResult">
 		<id column="memberNum" property="memberNum"/>
 		<result column="EMAIL" property="email"/>
 		<result column="MEMBERSTATE" property="memberState"/>
+  		<collection property="planVOs" javaType="List" ofType="planVO">
+  			<id column="PLANNUM" property="planNum"/>
+  			<result column="PLANNAME" property="planName"/>
+  		</collection>
 		<collection property="telephoneVOs" javaType="List" ofType="TelephoneVO">
   			<id column="PHONENUM" property="phoneNum"/>  			
   			<result column="PLANNUM" property="planNum"/>
@@ -50,15 +67,27 @@
 	</sql>
 	
 	<select id="getTotalTelephone" parameterType="Pager" resultType="Long">
-		SELECT COUNT(*) FROM MEMBER M
-		INNER JOIN TELEPHONE T
-		ON(M.MEMBERNUM = T.MEMBERNUM)		
+		SELECT DISTINCT COUNT(*) FROM MEMBER M
+		LEFT JOIN TELEPHONE T
+		ON(M.MEMBERNUM = T.MEMBERNUM)
+		INNER JOIN PLAN P
+		ON(T.PLANNUM = P.PLANNUM)
 		<include refid="searchTelephoneList"></include>
 	</select>
 	
 	<!-- 주문 목록 -->
 	<select id="orderList" parameterType="Pager" resultMap="OrderListResult">
-		SELECT O.ORDERNUM , M.MEMBERNUM , M.NAME , O.ORDERDATE , O.ORDERSTATE
+		<!-- SELECT P.ORDERNUM , P.MEMBERNUM , M.EMAIL , O.ORDERDATE , O.ORDERSTATE
+		FROM ORDERS O
+		LEFT JOIN MEMBER M
+ 		ON(O.MEMBERNUM = M.MEMBERNUM)
+ 		INNER JOIN PAY P
+ 		ON(O.ORDERNUM = P.ORDERNUM)
+ 		<include refid="searchOrderList"></include>
+		ORDER BY O.ORDERDATE DESC
+		LIMIT #{startRow}, #{perPage} -->
+		
+		SELECT O.ORDERNUM , M.MEMBERNUM , M.EMAIL , O.ORDERDATE , O.ORDERSTATE
 		FROM ORDERS O
 		INNER JOIN MEMBER M
  		ON(O.MEMBERNUM = M.MEMBERNUM)
@@ -72,7 +101,7 @@
 		<result column="ORDERSTATE" property="orderState"/>
 		<collection property="memberVOs" javaType="List" ofType="MemberVO">
   			<id column="MEMBERNUM" property="memberNum"/>
-  			<result column="NAME" property="name"/>					
+  			<result column="EMAIL" property="email"/>					
   		</collection>
 	</resultMap>
 	
@@ -89,13 +118,13 @@
 	
 	<!-- 주문 상세 페이지 -->
 	<select id="orderDetail" parameterType="OrderVO" resultMap="orderDetailResult">
-		SELECT O.ORDERNUM, O.ORDERDATE, O.ORDERADDRESS1, O.ORDERADDRESS2, O.ORDERADDRESS3, O.ORDERRECEIVER, O.ORDERTELNUM, D.DIRECTNAME, O2.ORDERAMOUNT, D.DIRECTPRICE 
+		SELECT DISTINCT O.ORDERNUM, O.ORDERDATE, O.ORDERADDRESS1, O.ORDERADDRESS2, O.ORDERADDRESS3, O.ORDERRECEIVER, O.ORDERTELNUM, D.DIRECTNAME, O2.ORDERAMOUNT, O2.DIRECTCODE, D.DIRECTPRICE
 		FROM ORDERS O
 		INNER JOIN ORDERDIRECT O2
 		ON(O.ORDERNUM = O2.ORDERNUM)
-		INNER JOIN DIRECT D
+		LEFT JOIN DIRECT D
 		ON(O2.DIRECTCODE = D.DIRECTCODE)
-		WHERE O.ORDERNUM = #{orderNum}
+		WHERE O.ORDERNUM = #{orderNum} 
 	</select>
 	<resultMap type="OrderVO" id="orderDetailResult">
 		<id column="ORDERNUM" property="orderNum"/>
@@ -106,7 +135,8 @@
 		<result column="ORDERRECEIVER" property="orderReceiver"/>
 		<result column="ORDERTELNUM" property="orderTelNum"/>
 		<collection property="orderDirectVOs" javaType="List" ofType="OrderDirectVO">
-  			<id column="ORDERNUM" property="orderNum"/>
+			<result column="ORDERNUM" property="orderNum"/>
+  			<result column="DIRECTCODE" property="directCode"/>
   			<result column="ORDERAMOUNT" property="orderAmount"/>
   		</collection>  		
   		<collection property="directVOs" javaType="List" ofType="DirectVO">
@@ -335,7 +365,7 @@
 	
 	
 	<!-- 미납 목록 -->
-	<!-- <select id="unpaidList" parameterType="BillVO">
+	<select id="unpaidList" parameterType="BillVO">
 		SELECT P.BILLNUM, T.MEMBERNUM, P.paidDate, P.totalPrice, P.paidCheck
 	    FROM PAYMENTDETAILS P
 	    LEFT JOIN TELEPHONE T
@@ -353,5 +383,5 @@
 		LEFT JOIN TELEPHONE T
 	    ON (P.serialNum  = T.SERIALNUM)	    
 		<include refid="unpaidListSearch"></include>
-	</select> -->
+	</select>
 </mapper>

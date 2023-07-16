@@ -87,7 +87,7 @@
                                                         <th><b>생년월일</b></th>
                                                         <th><b>주소</b></th>
                                                         <th><b>가입날짜</b> <!-- <i class="fa fa-fw fa-sort"> --></i></th>
-                                                        <!-- <th><b>로그인날짜</b> <i class="fa fa-fw fa-sort"></i></th> -->
+                                                        <th><b>로그인날짜</b> <!-- <i class="fa fa-fw fa-sort"></i> --></th>
                                                         <th><b>상태</b> <!-- <i class="fa fa-fw fa-sort"></i> --></th>
                                                     </tr>
                                                 </thead>
@@ -111,7 +111,7 @@
 		                                                        <span style="font-weight:400;">${formattedDate}</span>
 	                                                        </td>
 	
-	                                                        <!-- <td class="font-primary">1일 전</td> -->
+	                                                        <td class="font-primary">1일 전</td>
 	
 	                                                        <td>
 	                                                           	<c:if test="${memberVO.memberState eq '-1'}">
