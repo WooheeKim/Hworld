@@ -88,7 +88,6 @@ public class DirectService {
 	
 	// 상품 리뷰 작성 
 	public int setReviewAdd(ReviewVO reviewVO) throws Exception {
-		
 		return directDAO.setReviewAdd(reviewVO);
 	}
 	
@@ -96,34 +95,23 @@ public class DirectService {
 		
 	//상품 등록 
 	public int setInsert(DirectVO directVO, MultipartFile[] multipartFiles)throws Exception{
-		
 		String fileName = fileManager.deleteFile(multipartFiles, directVO);
 		fileName = fileManager.saveFile(multipartFiles, directVO);
-				
-		
 		int result = directDAO.setInsert(directVO);
-		
 		return result;
 	}
 
-
 	//상품 수정 
 	public int setUpdate(DirectVO directVO, MultipartFile[] multipartFiles) throws Exception{
-		
 		String fileName = fileManager.deleteFile(multipartFiles, directVO);
 		fileName = fileManager.saveFile(multipartFiles, directVO);	
-
 		return directDAO.setUpdate(directVO);
 	}
 
-	
 	//상품 삭제 
 	public int setDelete(String slicedCode) throws Exception{
-		
-		
 		return directDAO.setDelete(slicedCode);
 	}
-	
 	
 	public void setSeenList(HttpServletRequest request, HttpServletResponse response, String slicedCode) {
 	    Cookie[] cookies = request.getCookies();
@@ -173,8 +161,6 @@ public class DirectService {
 	    }
 	}
 
-
-    
 	public List<DirectVO> getSeenList(HttpServletRequest request) throws Exception {
 	    Cookie[] cookies = request.getCookies();
 	    List<DirectVO> recentlyViewedProducts = new ArrayList<>();
@@ -221,13 +207,9 @@ public class DirectService {
 	}
 
 
-
-
-
 	//리뷰삭제
 	public int setReviewDelete(ReviewVO reviewVO) throws Exception{
-		return directDAO.setReviewDelete(reviewVO);
-		
+		return directDAO.setReviewDelete(reviewVO);	
 	}
 	
 	//리뷰수정
@@ -247,8 +229,7 @@ public class DirectService {
 	public int setReplyAdd(QnaVO qnaVO) throws Exception{
 		return directDAO.setReplyAdd(qnaVO);
 	}
-	
-	
+
 	//getExistPlanList
 	public List<PlanVO> getExistPlanList() throws Exception{
 		return directDAO.getExistPlanList();
@@ -286,13 +267,6 @@ public class DirectService {
 				//회원번호 조회하기 ( 주민번호 뒷자리 입력하면 그 값으로 ) 
 				MemberVO memberVO = directDAO.getMemberSearch(applicationVO);
 				
-//				//OtherTelecomVO otTel = new OtherTelecomVO();
-//				boolean checkNum = false;
-//				//타통신사 번호 조회 
-//				String check = directDAO.isOtherTelecom();
-//				if(check != null) {
-//					checkNum = true; //타 통신사 번호임 
-//				}
 				
 				
 				//세션에서 정보 가져오기 (회원번호)
@@ -321,9 +295,32 @@ public class DirectService {
 				return result;
 	}
 
-		//구매완료(가입완료 후 결과안내 창)
+	//구매완료(가입완료 후 결과안내 창)
 	public PlanVO getMemberPlan(Integer memberNum) throws Exception{
 			return directDAO.getMemberPlan(memberNum);
-	}	
+	}
 	
+	public String getDirectName(Integer memberNum) throws Exception{
+		return directDAO.getDirectName(memberNum);
+	}
+	
+	//ownCheck 1로 변경 
+	public int setOwnCheck(Integer memberNum) throws Exception{
+		return directDAO.setOwnCheck(memberNum);
+	}
+
+	
+	// 휴대폰 번호 사용가능 여부 조회 
+	public Map<String, Object> checkPhoneNum(String phoneNum, String rrnf, String rrnl, String name) throws Exception {
+		// 휴대폰 번호 사용가능 여부 조회
+	
+		String encryptedRrnl = SHA256Util.encryptMD5(rrnf + "-" + rrnl); // 주민등록번호 뒷자리 암호화
+		  
+	    String result = directDAO.checkPhoneNum(phoneNum, rrnf, encryptedRrnl, name);
+	    
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("result", result);
+	    
+	    return resultMap;
+	}
 }

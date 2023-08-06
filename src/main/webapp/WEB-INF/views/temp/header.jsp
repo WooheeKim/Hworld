@@ -86,11 +86,11 @@
                                                 <li class="">
                                                     <a href="/etc/findShop" class="nav-link menu-title fw-bold fs-6">매장찾기</a>
                                                 </li>
-                                                <li class="">
+                                                 <li class="">
                                                     <a href="/form/application" class="nav-link menu-title fw-bold fs-6">가입신청서</a>
                                                 </li>
                 <!-- 관리자/회원 테스트용 로그인 버튼 시작, 테스트 후 필요없으면 삭제 -->
-                <!-- <li class="dropdown">
+                  <li class="dropdown">
 				    <a class="nav-link menu-title fw-bold fs-6">빠른로그인</a>
 				    <ul class="nav-submenu menu-content fw-bold">
 				        <li>
@@ -98,7 +98,7 @@
 				        </li>
 				        <li>
 				            <a href="javascript:void(0)" class="d-block fw-bold fs-6 me-3" id="testMember">일반회원</a>
-				        </li> -->
+				        </li>
                 <!-- 관리자/회원 테스트용 로그인 버튼 끝, 테스트 후 필요없으면 삭제 -->
                                             </ul>
                                         </div>

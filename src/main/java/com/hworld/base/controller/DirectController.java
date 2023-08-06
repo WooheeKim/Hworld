@@ -24,6 +24,7 @@ import org.apache.catalina.util.URLEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -124,7 +125,17 @@ public class DirectController {
 	@GetMapping("phoneDetail")
 	public ModelAndView getDetail(String slicedCode, QnaVO qnaVO, HttpSession session) throws Exception{
 		ModelAndView mv = new ModelAndView();
-
+		MemberVO memberVO = (MemberVO) session.getAttribute("memberVO");
+		if (memberVO == null || memberVO.getMemberNum() == null) {
+	       
+			String message="로그인이 필요합니다.";
+			
+			mv.addObject("url", "/member/login"); 
+		    mv.addObject("result", message);
+	        mv.setViewName("common/result");
+	        return mv;
+	    }
+		
 	    List<DirectVO> ar = directService.getDetail(slicedCode);
 	   
 	    List<PlanVO> existPlanList = directService.getExistPlanList();
@@ -162,13 +173,13 @@ public class DirectController {
 		}
 	    
 	    List<ReviewVO> reviews = directService.getReview(slicedCode);//slicedCode로 페이징된 리뷰 목록 조회
-	    List<ReviewVO> pReview = new ArrayList<>();
-	    for(ReviewVO review : reviews) {
-	    	String categoryCode = review.getCategoryCode();
-	    	if(categoryCode.equals("00")) {
-	    		pReview.add(review);
-	    	}
-	    }
+//	    List<ReviewVO> pReview = new ArrayList<>();
+//	    for(ReviewVO review : reviews) {
+//	    	String categoryCode = review.getCategoryCode();
+//	    	if(categoryCode.equals("00")) {
+//	    		pReview.add(review);
+//	    	}
+//	    }
 	    
 	 // 세션에서 계산된 값(params)을 가져옴
 	    Map<String, Object> monthlyPay = (Map<String, Object>) session.getAttribute("monthlyPay");
@@ -191,7 +202,7 @@ public class DirectController {
 		mv.addObject("qnaList", pQna);
 		
 	    mv.addObject("list", ar);
-	    mv.addObject("review",pReview);
+	    mv.addObject("review",reviews);
 	    mv.setViewName("hworld/phoneDetail");
 
 		return mv;
@@ -260,17 +271,17 @@ public class DirectController {
 		
 	    directService.setSeenList(request, response, slicedCode);
 	    List<ReviewVO> reviews = directService.getReview(slicedCode);//slicedCode로 페이징된 리뷰 목록 조회
-	    List<ReviewVO> accReview = new ArrayList<>();
-	    for(ReviewVO review : reviews) {
-	    	String categoryCode = review.getCategoryCode();
-	    	if(!categoryCode.equals("01")) {
-	    		accReview.add(review);
-	    	}
-	    }
+//	    List<ReviewVO> accReview = new ArrayList<>();
+//	    for(ReviewVO review : reviews) {
+//	    	String categoryCode = review.getCategoryCode();
+//	    	if(!categoryCode.equals("01")) {
+//	    		accReview.add(review);
+//	    	}
+//	    }
 	    
 		mv.addObject("list", ar);		
 		mv.addObject("qnaList", accQna);
-		mv.addObject("review",accReview);
+		mv.addObject("review",reviews);
 		mv.setViewName("hworld/accessoryDetail2");
 		return mv;
 	}
@@ -511,8 +522,6 @@ public class DirectController {
 		
 			Integer memberNum = memberVO.getMemberNum();
 		
-
-		
 		//회선이 없는 경우 null 뜨는거 방지해야해 진희야 까먹지마 
 		PlanVO phoneNum = directService.getKingPhoneNum(memberNum);
 		
@@ -525,8 +534,7 @@ public class DirectController {
 
 		
 		} else {
-			
-			
+
 			mv.addObject("map", map);
 			mv.setViewName("hworld/phoneOrder");
 			return mv;
@@ -534,7 +542,7 @@ public class DirectController {
 		}
 		}
 	}
-	
+	@Transactional
 	@PostMapping("formAdd")
 	public ModelAndView setFormAdd(@Valid ApplicationVO applicationVO, BindingResult bindingResult, HttpSession session) throws Exception{
 		ModelAndView mv = new ModelAndView();
@@ -550,20 +558,38 @@ public class DirectController {
 		int result = directService.setFormAdd(applicationVO, session);
 		log.info("=============> result : {} ", result);
 		
+		
+		MemberVO memberVO = (MemberVO) session.getAttribute("memberVO");
+		Integer memberNum = memberVO.getMemberNum();
+		int ownResult = directService.setOwnCheck(memberNum);
+		
 		mv.setViewName("redirect:./phoneOrderResult");
 		//성공하면 결과에 따라 alert띄우기 해도 될듯. 나중에 index 등으로 바꾸기
 		return mv;
 	}
+	
+	@ResponseBody
+	@GetMapping("checkPhoneNum")
+	public Map<String, Object> checkPhoneNum(String phoneNum, String rrnf, String rrnl, String name) throws Exception {
+	    return directService.checkPhoneNum(phoneNum, rrnf, rrnl, name);
+	}
+	
+	
+	
 	//휴대폰 상품 구매 후 결과 페이지
 	@GetMapping("phoneOrderResult")
 	public ModelAndView phoneOrderResult(@RequestParam Map<String, Object> map, HttpSession session) throws Exception{
 		ModelAndView mv = new ModelAndView();
 		MemberVO memberVO = (MemberVO) session.getAttribute("memberVO");
 		Integer memberNum = memberVO.getMemberNum();
-		//회선이 없는 경우 null 뜨는거 방지해야해 진희야 까먹지마 
+		
+		// 신규가입인 경우 만 해당 
 		PlanVO phoneNum = directService.getMemberPlan(memberNum);
 		
+		String directName = directService.getDirectName(memberNum);
+		log.error(directName);
 		mv.addObject("phone", phoneNum);
+		mv.addObject("directName", directName);
 		mv.setViewName("hworld/phoneOrderResult");
 		return mv;
 	}

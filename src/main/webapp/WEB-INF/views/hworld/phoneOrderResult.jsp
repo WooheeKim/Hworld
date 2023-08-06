@@ -36,21 +36,21 @@
                         <div class="materialContainer">
                             <div class="material-details">
                                 <div class="title title1 title-effect mb-1 title-left">
-                                    <p class="fs-3 w-100 text-center">${memberVO.name} 님, <strong class="fs-2 theme-color">H world</strong>에 오신것을 환영합니다! <br> 선택하신 <strong class="fs-2 theme-color">상품</strong>으로 <strong class="fs-2 theme-color">가입</strong>이 완료되었습니다.</p>
+                                    <p class="fs-3 w-100 text-center">${memberVO.name} 님, <strong class="fs-2 theme-color">H world</strong>에 오신것을 환영합니다! <br> 선택하신 <strong class="fs-2 theme-color">${directName}</strong>으로 <strong class="fs-2 theme-color">가입</strong>이 완료되었습니다.</p>
                                 </div>
                             </div>
                             <div class="">
                                 <div class="row mb-5 justify-content-center">
                                     <div class="col-lg-5 text-center">
                                         <div class="contact-details rounded-3 mt-3 mb-3 ">
-                                            <%-- <div class="container">
+                                           <div class="container">
                                                 <button class="btn rounded-pill m-1 default-theme mb-3"> <h6>선택한 요금상품</h6></button>
                                                 <h2 class="fw-bolder">${phone.planName}</h2>
                                                 <div class="container">
                                                  <c:set var="phoneNum" value="${phone.phoneNum}" />
 											<c:set var="formattedPhoneNum" value="${fn:substring(phoneNum, 0, 3)}-${fn:substring(phoneNum, 3, 7)}-${fn:substring(phoneNum, 7,11)}" />
                                                     <h2 class="font-light" >${formattedPhoneNum}</h2>
-                                                </div> --%>
+                                                </div> 
                                                 <div class="contact-box justify-content-center" style="border-bottom:2px solid; border-color:#fff; padding-bottom:20px;">
                                                     <div class="mx-6 ">
                                                         <img class="mb-4"src="/assets/images/mobile-phone.png">
@@ -60,7 +60,7 @@
                                                 <div class="contact-box justify-content-center">
                                                     <div class="contact-title">
                                                         <span class="fs-6 mb-0">H world는 항상 ${memberVO.name}님을 생각하며<br> 최상의 서비스로 최고의 만족을 드리기 위해 노력하겠습니다.</span>
-                                                        
+                                                       
                                                     </div>
                                                     
                                                 </div>

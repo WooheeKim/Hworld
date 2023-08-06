@@ -1,5 +1,7 @@
 package com.hworld.base.vo;
 
+import java.sql.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,4 +33,6 @@ public class PlanVO {
     private String note;
     private String type;
     
+    private Date contractDate;
+    private Date expireDate;
 }

@@ -217,14 +217,14 @@
 	
 	<!-- isDuplicatePhoneNum -->
 	<!-- 전화번호 중복 체크 - 자회사 -->
-	<select id="isDuplicatePhoneNum" parameterType="String" resultType="String">
+	<select id="isChangeableNum" parameterType="String" resultType="String">
 		SELECT PHONENUM FROM TELEPHONE
 		WHERE PHONENUM=#{phoneNum}
 	</select>
 	
 	<!-- isDuplicatePhoneNumOT -->
 	<!-- 전화번호 중복 체크 - 타회사 -->
-	<select id="isDuplicatePhoneNumOT" parameterType="String" resultType="String">
+	<select id="isChangeableNumOT" parameterType="String" resultType="String">
 		SELECT TAPHONENUM AS PHONENUM FROM OTHERTELECOM
 		WHERE TAPHONENUM=#{phoneNum}
 	</select>

@@ -33,6 +33,15 @@ $('.optionArea').on('click', 'li[name="colorCode"], label.capacity', function() 
 
   //색상, 용량 옵션이 선택 됐는지 체크
   let selColor = $('#colorCode').val();
+  if(selColor=='W'){
+	  $('#colorName').text('화이트');
+  }else if(selColor == 'G'){
+	   $('#colorName').text('그레이');
+  }else if(selColor == 'B'){
+	   $('#colorName').text('블랙');
+	}else {
+		$('#colorName').text('');
+	}
   let selCapacity = $('#saveCapacity').val();
 
   chkColor = isEmpty(selColor);
@@ -174,7 +183,6 @@ $('#directCode, input[name="disKind"], input[name="planNum"]').on('change', func
   
   //영수증 가격 출력
   let directCode = $('#directCode').val(); // 기기코드
-  let saveCapacity = $('#saveCapacity').val();
   let planNum = $('input[name=planNum]:checked').val(); // 요금제번호
   let disKind = $('input[name=disKind]:checked').val(); // 할인유형
 

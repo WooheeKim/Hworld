@@ -136,10 +136,12 @@
 		                            </div>
                             <div class="col-md-6">
                                 <div class="cloth-details-size">
+                                <c:if test="${memberVO.adminCheck == 0}">
                                     <div class="admin-update-delete d-flex justify-content-end">
                                         <a href="./accessoryUpdate?slicedCode=${directVO.slicedCode}" class="me-3">수정</a>
                                         <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#productdel2" id="productDelModal2" >삭제</a>
-                                    </div>    
+                                    </div>  
+                                    </c:if>  
 									<div id="directList">
 										
 										<c:forEach items="${list}" var="direct" varStatus="status">
@@ -383,11 +385,13 @@
 			                                  		<div hidden>        
 								                       <c:set var="totalRating" value="0" />${totalRating}
 														<c:forEach items="${review}" var="review">
-					    									<c:set var="totalRating" value="${totalRating + review.rate}" /><p> 이거 뭐야  ${totalRating} </p>
+					    									<c:set var="totalRating" value="${totalRating + review.rate}" /><p> ${totalRating} </p>
 														</c:forEach>
 													</div>
-													<c:set var="averageRating" value="${totalRating / review.size()}" />
-													 <h2>평점 (<fmt:formatNumber value="${averageRating}" pattern="#.#" />)</h2>
+													<c:set var="averageRating" value="${empty review ? 0 : totalRating / review.size()}" />
+														<c:if test="${not empty averageRating && averageRating != null}">
+														    <h2>평점 (<fmt:formatNumber value="${averageRating}" pattern="#.#" />)</h2>
+														</c:if>
 
 				                                            <ul class="rating my-2 d-inline-block">
 																<li><i class="fas fa-star ${averageRating >= 0.5 ? 'theme-color' : ''}"></i></li>

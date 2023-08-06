@@ -38,8 +38,8 @@
                         <div class="material-details">
                             <div class="title title1 title-effect mb-1 title-left">
                                 <h2>${planVO.planName}</h2>
-                                <p class="fs-3 w-100 text-center">${memberVO.name}님, 사용중인 상품과 변경하실 상품을 확인하세요.</p>
-                                <input type="text" id="days" value="${days}">
+                                <div class="cancelFeeIs"><p class="fs-3 w-100 text-center">${memberVO.name}님, 사용중인 상품과 변경하실 상품을 확인하세요.</p>
+                            </div>
                             </div>
                         </div>
                  <div class="container-fluid">
@@ -125,11 +125,39 @@
                             </div>
                         </div>
                     </div>
-                    <form action="./planChange" method="Post">
-                    <input type="hidden" name="serialNum" value="${bfPlan.serialNum}">
-                    <input type="hidden" name="planNum" value="${planVO.planNum}">
+                    <input type="hidden" id="seNum"name="serialNum" value="${bfPlan.serialNum}">
+                    <input type="hidden" id="plNum" name="planNum" value="${planVO.planNum}">
                     <input type="hidden" name="nowDate" id="now" value="">
-                        
+                    <input type="hidden" name="requestCode" id="requestCode" value="1">
+                    <input type="hidden" id="expireDate" value="${bfPlan.expireDate}">
+                    
+                    <div class="cancelFee row mb-5 justify-content-center">
+                                <div class="col-lg-9">
+                                    <div class="contact-details rounded-3 mt-3 mb-3">
+                                        <div class="container">
+                                            
+                                            <h2 class="fw-bolder"><img class="mb-1"src="/assets/images/redwarning.png">
+                                                위약금 결제 후 요금제 변경이 가능합니다.</h2>
+                                            <div class="container">
+                                                <div class="font-light fs-6 mt-1 d-flex">	
+
+                                                    □ 위약금 :  <div class="mx-2 fs-6" id="cancelPrice"></div>원</div>
+                                                    □ 개통일자 : <fmt:formatDate value="${bfPlan.contractDate}" pattern="yyyy 년 MM 월 dd 일" /><br>
+                                                    □ 공시지원금 약정 만료일자 : <fmt:formatDate value="${bfPlan.expireDate}" pattern="yyyy 년 MM 월 dd 일" /><br>
+                                                   <div class="d-flex"> □ 남은 약정일자 : <div class="remainDays mx-1"></div>일 </div>
+                                                    
+                                               
+                                            </div>
+                                            <div class="form-check ps-0 custome-form-check justify-content-center">
+                                                <button class="btn rounded-3 btn-solid-default">일시불 결제하기</button>
+                                                
+                                               
+                                            </div>
+					                    </div>
+					                </div>
+					            </div>
+					</div>             
+                         <form action="./planChange" method="Post">
                             <div class="row mb-5 justify-content-center">
                                 <div class="col-lg-9">
                                     <div class="contact-details rounded-3 mt-3 mb-3">
@@ -160,7 +188,7 @@
    
     				<div class="container">
     					<div class="col-12 mb-3 container justify-content-center" style="width: 17.66667%">
-					    <button type="submit" class="btn rounded-3 btn-solid-default">변경하기</button>
+					    <button type="submit" class="changebtn btn rounded-3 btn-solid-default">변경하기</button>
 					    <button onclick="location.href = '#';" type="button" class="btn rounded-3 btn-secondary">취소</button>
 				    </div>  
 				    </div>
@@ -176,6 +204,8 @@
 <c:import url="../temp/footer.jsp"></c:import>
 
 <script>
+
+
 const currentDate = new Date();
 
 const year = currentDate.getFullYear();
@@ -184,13 +214,70 @@ const day = currentDate.getDate();
 
 const formattedDate = new Date(year, month - 1, day);
 
-console.log(formattedDate);
-
 const formattedDateString = formattedDate.toISOString().slice(0, 10);
 
-console.log("현재 날짜: " + formattedDateString);
-
 document.getElementById('now').value = formattedDateString;
+</script>
+<script>
+
+$(document).ready(function() {
+
+const serialNum = $('#seNum').val();
+console.log(serialNum);
+const requestCode=$('#requestCode').val();
+const nowDate = $('#now').val();
+//const nowDate = new Date().toISOString();
+const planNum = $('#plNum').val();
+
+ $.ajax({
+type: 'GET',
+url: './checkCancelFee',
+dataType: 'JSON',
+data: {
+    serialNum: serialNum,
+    nowDate: nowDate,
+    requestCode: requestCode,
+    planNum: planNum,
+   	
+},
+success: function(response) {
+	let cancelPrice = response.cancelPrice;
+	
+	$('#cancelPrice').text(cancelPrice.toLocaleString());
+	$('.cancelFeeIs').html('<p class="fs-3 w-100 text-center">${memberVO.name}님, 요금제 변경시 위약금이 발생합니다.</p>');
+	$('.changebtn').prop('disabled', true);
+	
+	if(cancelPrice<0 || cancelPrice==0){
+		$('.cancelFee').hide();
+		$('.changebtn').prop('disabled', false);
+		
+	}
+
+},
+error: function(error) {
+    // 에러 처리 로직 작성
+    console.log(error);
+}
+});
+
+
+ 
+});
+
+
+const endDate = $('#expireDate').val();
+const now = $('#now').val();
+//남은 약정일자 계산 (endDate - nowDate)
+
+const expireDate = new Date(endDate);
+const nowDate = new Date(now);
+
+const remain = expireDate.getTime() - nowDate.getTime();
+const days = Math.floor(remain / (1000 * 60 * 60 * 24)); // 밀리초(ms)를 일수로 변환
+
+
+$('.remainDays').text(days);
+
 
 </script>
 

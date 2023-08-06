@@ -336,9 +336,10 @@
 										        </div>
 												<div class="color-types">
 													<ul class="color-variant mb-0">
-														<li class="bg-white border border-1" value="W" name="colorCode"></li>
+														<li class="bg-white border border-1" value="W" name="colorCode"></li> 
 														<li class="bg-gray1" value="G" name="colorCode"></li>
 														<li class="bg-black1" value="B" name="colorCode"></li>
+														<span id="colorName"></span>
 													</ul>
         										</div>
 											</div>
@@ -374,19 +375,44 @@
 											<div class="option-title-area">
 												<h3 class="option-title mt-3 mb-2">가입유형</h3>
 											</div>
+											
 											<div class="option-types" id="joinType">
+											<c:choose>
+											<c:when test="${memberVO.ownCheck == 0}">
 												<span class="c-ick-btn">
+													<input type="radio" hidden name="joinType" id="joinType1" value="0">
+													<label for="joinType1" class="btn m-1 btn-outline-custom joinType btn-disabled">
+														<span class="labelin">기기변경</span>
+													</label>
+												</span>
+											</c:when>
+											<c:otherwise>
+											<span class="c-ick-btn">
 													<input type="radio" hidden name="joinType" id="joinType1" value="0">
 													<label for="joinType1" class="btn m-1 btn-outline-custom joinType">
 														<span class="labelin">기기변경</span>
 													</label>
 												</span>
+											</c:otherwise>
+											</c:choose>
+											<c:choose>
+											<c:when test="${memberVO.ownCheck == 1}">
 												<span class="c-ick-btn">
+													<input type="radio" hidden name="joinType" id="joinType2" value="1">
+													<label for="joinType2" class="btn m-1 btn-outline-custom joinType btn-disabled">
+														<span class="labelin">번호이동</span>
+													</label>
+												</span>
+											</c:when>
+											<c:otherwise>
+											<span class="c-ick-btn">
 													<input type="radio" hidden name="joinType" id="joinType2" value="1">
 													<label for="joinType2" class="btn m-1 btn-outline-custom joinType">
 														<span class="labelin">번호이동</span>
 													</label>
 												</span>
+												</c:otherwise>
+											</c:choose>
 												<span class="c-ick-btn">
 													<input type="radio" hidden name="joinType" id="joinType3" value="2">
 													<label for="joinType3" class="btn m-1 btn-outline-custom joinType">
@@ -394,6 +420,7 @@
 													</label>
 												</span>
 											</div>
+											
 										</div>                                    
 							<!-- 할인유형 선택  -->
 									<div class="product-option-item pay installment">
@@ -815,6 +842,7 @@
                                  <div class="product-right">
                                      <div class="size-detail">
                                          <h6 class="mb-3 mx-3 fw-bolder">요금제 선택</h6>
+                                         <input type="text" id="age">
                                          <!-- 요금제 유형 영역, 주석처리한거 써도 되기는한데 순서가 안맞을 수 있어서 아래처럼 처리함 -->
                                          <ul class="nav border-0" style="color:black;">
                                          <c:forEach items="${existList}" var="i">
@@ -900,8 +928,9 @@
                                           	<c:forEach items="${sList}" var="i" varStatus="status">
                                           		<div class="mt-1" style="border-box:0px; box-shadow:1px 1px 2px 0px gray;  width:97%;">
                                            	<div class="form-check custome-radio-box mt-1">
-                                         				<input type="radio" name="planNum" class="form-check-input my-2" id="${i.planNum}" value="${i.planNum}" data-plan-price="${i.planPrice}" data-dp="${i.disCode}"/>
+                                         				<input type="radio" name="planNum" class="form-check-input my-2" id="${i.planNum}" value="${i.planNum}"data-gb-value="${i.dataCapacity}" data-plan-price="${i.planPrice}" data-dp="${i.disCode}"/>
                                          				<label class="form-check-label fs-5" for="${i.planNum}">${i.planName}</label>
+                                         				<div class="noti" style="margin-top:-10px; margin-left:10px; display:inline-block;"></div>
                                                   </div>
                                                   <div class="d-flex justify-content-between mb-1">
                                                   	<label class="form-check-label ellipsis fs-6 mx-3" style="color:gray;">
@@ -933,8 +962,10 @@
                                           	<c:forEach items="${tList}" var="i" varStatus="status">
                                            	<div class="mt-1" style="border-box:0px; box-shadow:1px 1px 2px 0px gray;  width:97%;">
                                            	<div class="form-check custome-radio-box mt-1">
-                                         				<input type="radio" name="planNum" class="form-check-input my-2" id="${i.planNum}" value="${i.planNum}" data-plan-price="${i.planPrice}" data-dp="${i.disCode}"/>
-                                         				<label class="form-check-label fs-5" for="${i.planNum}">${i.planName}</label>
+                                         				<input type="radio" name="planNum" class="form-check-input my-2" id="${i.planNum}" data-gb-value="${i.dataCapacity}" value="${i.planNum}" data-plan-price="${i.planPrice}" data-dp="${i.disCode}"/>
+                                         				
+                                         				<label class="form-check-label fs-5 " for="${i.planNum}">${i.planName}</label>
+                                         				<div class="noti" style="margin-top:-10px; margin-left:10px; display:inline-block;"></div>
                                                   </div>
                                                   <div class="d-flex justify-content-between mb-1">
                                                   	<label class="form-check-label ellipsis fs-6 mx-3" style="color:gray;">
@@ -967,8 +998,9 @@
                                           	<c:forEach items="${zList}" var="i" varStatus="status">
                                            	<div class="mt-1" style="border-box:0px; box-shadow:1px 1px 2px 0px gray;  width:97%;">
                                            	<div class="form-check custome-radio-box mt-1">
-                                         				<input type="radio" name="planNum" class="form-check-input my-2" id="${i.planNum}" value="${i.planNum}" data-plan-price="${i.planPrice}" data-dp="${i.disCode}"/>
+                                         				<input type="radio" name="planNum" class="form-check-input my-2" id="${i.planNum}" value="${i.planNum}" data-gb-value="${i.dataCapacity}" data-plan-price="${i.planPrice}" data-dp="${i.disCode}"/>
                                          				<label class="form-check-label fs-5" for="${i.planNum}">${i.planName}</label>
+                                         				<div class="noti" style="margin-top:-10px; margin-left:10px; display:inline-block;"></div>
                                                   </div>
                                                   <div class="d-flex justify-content-between mb-1">
                                                   	<label class="form-check-label ellipsis fs-6 mx-3" style="color:gray;">
@@ -1000,7 +1032,7 @@
                                           	<c:forEach items="${wList}" var="i" varStatus="status">
                                            	<div class="mt-1" style="border-box:0px; box-shadow:1px 1px 2px 0px gray;  width:97%;">
                                            	<div class="form-check custome-radio-box mt-1">
-                                         				<input type="radio" name="planNum" class="form-check-input my-2" id="${i.planNum}" value="${i.planNum}" data-plan-price="${i.planPrice}" data-dp="${i.disCode}"/>
+                                         				<input type="radio" name="planNum" class="form-check-input my-2" id="${i.planNum}" value="${i.planNum}" data-gb-value="${i.dataCapacity}" data-plan-price="${i.planPrice}" data-dp="${i.disCode}"/>
                                          				<label class="form-check-label fs-5" for="${i.planNum}">${i.planName}</label>
                                                   </div>
                                                   <div class="d-flex justify-content-between mb-1">
@@ -1033,7 +1065,7 @@
                                           	<c:forEach items="${hList}" var="i" varStatus="status">
                                            	<div class="mt-1" style="border-box:0px; box-shadow:1px 1px 2px 0px gray;  width:97%;">
                                            	<div class="form-check custome-radio-box mt-1">
-                                         				<input type="radio" name="planNum" class="form-check-input my-2" id="${i.planNum}" value="${i.planNum}" data-plan-price="${i.planPrice}" data-dp="${i.disCode}"/>
+                                         				<input type="radio" name="planNum" class="form-check-input my-2" id="${i.planNum}" value="${i.planNum}" data-gb-value="${i.dataCapacity}" data-plan-price="${i.planPrice}" data-dp="${i.disCode}"/>
                                          				<label class="form-check-label fs-5" for="${i.planNum}">${i.planName}</label>
                                                   </div>
                                                   <div class="d-flex justify-content-between mb-1">
@@ -1459,69 +1491,120 @@ $(document).ready(function() {
         prices[i].innerHTML =commaPrice ;
        	
     }
- // 세션에서 ownCheck 값 가져오기
-    const ownCheck = ${memberVO.ownCheck};
-	console.log(ownCheck);
-    // 해당 ownCheck에 따라 라디오 버튼의 disabled 속성 설정
-    // 해당 ownCheck에 따라 라디오 버튼의 disabled 속성 설정
-  if (ownCheck == 0) {
-    $('#joinType1').prop('disabled', true).addClass('btn-disabled');
-  } else if (ownCheck == 1) {
-    $('#joinType2').prop('disabled', true).addClass('btn-disabled');
-  }
-   
-    	  // 세션에서 planNum 값 가져오기
-    	  const splanNum = '${monthlyPay.planNum}';
+ 
+// 세션에서 리스트에서 선택한 planNum 값 가져오기 ------------->
+ 	  const splanNum = '${monthlyPay.planNum}';
 
-    	  // 해당 planNum에 해당하는 라디오 버튼을 선택 상태로 변경
-    	  $('input[name="planNum"][value="' + splanNum + '"]').prop('checked', true);
+ 	  // 해당 planNum에 해당하는 라디오 버튼을 선택 상태로 변경
+ 	  $('input[name="planNum"][value="' + splanNum + '"]').prop('checked', true);
 
-    	  // 초기값에 해당하는 요금제 정보를 보여주기
-    	  const selectedValue = document.querySelector('input[name="planNum"]:checked');
-    	  setSelectedPlan(selectedValue);
-    	});
+ 	  // 초기값에 해당하는 요금제 정보를 보여주기
+ 	  const selectedValue = document.querySelector('input[name="planNum"]:checked');
+ 	  setSelectedPlan(selectedValue);
+ });
 
-    	// 모달창에서 값을 선택하고 확인 버튼을 클릭했을 때 호출되는 함수
-    	function onSelectConfirm() {
-    	  // 선택한 값을 가져오기
-    	  const selectedValue = document.querySelector('input[name="planNum"]:checked');
-    	  setSelectedPlan(selectedValue);
-    	}
+// 요금제 변경 모달창에서 값을 선택하고 확인 버튼을 클릭했을 때 호출되는 함수
+ 	function onSelectConfirm() {
+ 	  // 선택한 값을 가져오기
+ 	  const selectedValue = document.querySelector('input[name="planNum"]:checked');
+ 	  setSelectedPlan(selectedValue);
+ 	}
 
-    	// 선택한 요금제 정보를 보여주는 함수
-    	function setSelectedPlan(selectedValue) {
-    	  const planNameLabel = document.querySelector('label[for="' + selectedValue.id + '"]');
-    	  const planName = planNameLabel.innerText;
-    	  const planPrice = selectedValue.getAttribute('data-plan-price');
-    	  const dataGB = selectedValue.getAttribute('data-gb-value');
-    	  const planNum = selectedValue.getAttribute('value');
+ 	// 선택한 요금제 정보를 보여주는 함수
+ 	function setSelectedPlan(selectedValue) {
+ 	  const planNameLabel = document.querySelector('label[for="' + selectedValue.id + '"]');
+ 	  const planName = planNameLabel.innerText;
+ 	  const planPrice = selectedValue.getAttribute('data-plan-price');
+ 	  const dataGB = selectedValue.getAttribute('data-gb-value');
+ 	  const planNum = selectedValue.getAttribute('value');
 
-    	  // 가져온 값을 입력하기
-    	  document.getElementById('selectedPlanName').textContent = planName;
-    	  // 가져온 값을 입력하기
-    	  document.getElementById('selectedPlanName').textContent = planName;
+ 	  // 가져온 값을 입력하기
+ 	  document.getElementById('selectedPlanName').textContent = planName;
+ 	  // 가져온 값을 입력하기
+ 	  document.getElementById('selectedPlanName').textContent = planName;
 
-    	  // `,`를 추가하여 표시
-    	  const formattedPlanPrice = parseInt(planPrice).toLocaleString();
-    	  document.getElementById('planPrice').setAttribute('data-plan-price2', formattedPlanPrice);
-    	  document.getElementById('planPrice').textContent = formattedPlanPrice;
+ 	  // `,`를 추가하여 표시
+ 	  const formattedPlanPrice = parseInt(planPrice).toLocaleString();
+ 	  document.getElementById('planPrice').setAttribute('data-plan-price2', formattedPlanPrice);
+ 	  document.getElementById('planPrice').textContent = formattedPlanPrice;
 
-    	  document.getElementById('planNum').value = planNum;
+ 	  document.getElementById('planNum').value = planNum;
 
-    	  // 데이터 정보 처리
-    	  const dataGBElement = document.getElementById('dataGB');
-    	  if (dataGB === '무제한') {
-    	    dataGBElement.innerText = dataGB + '& 음성통화/문자 기본제공';
-    	  } else {
-    	    dataGBElement.innerText = dataGB + 'GB & 음성통화/문자 기본제공';
-    	  }
-    	}
-
+ 	  // 데이터 정보 처리
+ 	  const dataGBElement = document.getElementById('dataGB');
+ 	  if (dataGB === '무제한') {
+ 	    dataGBElement.innerText = dataGB + '& 음성통화/문자 기본제공';
+ 	  } else {
+ 	    dataGBElement.innerText = dataGB + 'GB & 음성통화/문자 기본제공';
+ 	  }
+ 	}
+ // 요금제 변경창에서 선택한 값으로 end<-------------
 
 var priceElement = document.getElementById("planPrice");
 var price = parseInt(priceElement.textContent);
 var formattedPrice = price.toLocaleString(); // 쉼표를 추가한 형식으로 변환
 priceElement.textContent = formattedPrice; 
+
+
+const memberBirth = '${memberVO.rrnf}';
+let age = calculateAge(memberBirth);
+console.log(age);
+
+
+$('#age').val(age);
+const radios = document.getElementsByName('planNum');
+for (let i = 0; i < radios.length; i++) {
+    const radio = radios[i];
+    const planNumAge = radio.value;
+    
+    let maxAge = "";
+    let minAge = "";
+    if(planNumAge.includes('T')){
+ 	   maxAge = 18;
+ 	   
+    }
+    if(planNumAge.includes('Z')){
+    	maxAge = 12;
+    }
+    
+    if(planNumAge.includes('S01')){
+    	minAge= 65;
+    } else if(planNumAge.includes('S02')){
+	   minAge = 70;
+   } else if(planNumAge.includes('S03')){
+	   minAge = 80;
+   }
+    
+    if (age > maxAge && maxAge != 0) {
+        radio.disabled = true;
+        $(radio).siblings('.noti').text("나이제한으로 선택이 불가합니다.");
+    }
+    if (age < minAge && minAge != 0) { 
+        radio.disabled = true;
+        $(radio).siblings('.noti').text("나이제한으로 선택이 불가합니다.");
+    }
+}
+//나이 계산 함수
+function calculateAge(memberBirth) {
+    let birthYear = parseInt(memberBirth.substring(0, 2), 10);
+    let birthMonth = parseInt(memberBirth.substring(2, 4), 10);
+    let birthDay = parseInt(memberBirth.substring(4, 6), 10);
+
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = currentDate.getMonth() + 1;
+    let currentDay = currentDate.getDate();
+
+    let century = (birthYear >= 0 && birthYear <= 21) ? 2000 : 1900;
+    let age = currentYear - (century + birthYear);
+    
+    if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDay < birthDay)) {
+        age--;
+    }
+
+    return age;
+}
+
 
 
 

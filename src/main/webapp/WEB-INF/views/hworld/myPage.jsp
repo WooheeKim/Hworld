@@ -670,7 +670,7 @@
                                                     
                                                         <ul class="dropdown-menu col-md-6" aria-labelledby="dropdownMenuButton1">
                                                             <li>
-                                                                <a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal"
+                                                                <a class="dropdown-item numChange" href="javascript:void(0)" data-bs-toggle="modal"
                                                                 data-bs-target="#changeNumber">번호 변경</a>
                                                             </li>
                                                             <li>
@@ -1064,17 +1064,19 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form action="./changeNumber" method="post">
                         <div class="mb-4">
                             <label for="numChangeValue" class="form-label">번호 변경</label>
                             <input type="text" class="form-control" id="numChangeValue" name="phoneNum" placeholder="번호만 입력하세요">
+                            <input type="hidden" id="checkAllowed">
                             <div class="my-2" id="searchResult">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer pt-0 text-end d-block">
-                    <button class="btn btn-solid-default rounded-1" data-bs-target="#changeDoneModal" data-bs-toggle="modal" data-bs-dismiss="modal">변경</button>
+                    <button class="btn btn-solid-default rounded-1" id="executiveChangeNumber" data-bs-toggle="modal" data-bs-dismiss="modal">변경</button>
+                    <!-- data-bs-target="#changeDoneModal"  -->
                 </div>
             </div>
         </div>

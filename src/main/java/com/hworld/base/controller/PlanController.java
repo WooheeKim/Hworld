@@ -1,5 +1,7 @@
 package com.hworld.base.controller;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -166,7 +168,6 @@ public class PlanController {
 		planVO.setPlanNum(planNum);		
 		planVO=planService.getDetail(planVO);
 		
-
 		if(result==1) {
 			String message="확인이 완료되었습니다.";
 			mv.addObject("url","./planChange");
@@ -191,6 +192,7 @@ public class PlanController {
 		memberNum = sessionMember.getMemberNum();
 		
 		PlanVO planVO = planService.getBeforePlan(memberNum);
+		
 		mv.addObject("bfPlan", planVO);
 		mv.setViewName("hworld/planChange");
 
@@ -208,22 +210,38 @@ public class PlanController {
 
 		PlanVO phoneNum = planService.getBeforePlan(memberNum);
 		
-		mv.addObject("phoneNum", phoneNum);
-		mv.setViewName("hworld/planResult");
-		
 		 // 세션에서 선택한 요금제 데이터 삭제
 	    session.removeAttribute("planVO");
 
+		mv.addObject("phoneNum", phoneNum);
+		mv.setViewName("hworld/planResult");
+		
+		
+
 		return mv;
+	}
+	
+	//위약금 조회
+	@ResponseBody
+	@GetMapping("checkCancelFee")
+	public Map<String, Object> getCheckCancleFee(@RequestParam Map<String, Object> params, HttpSession session) throws Exception{
+		
+		params.put("serialNum", Integer.parseInt((String)params.get("serialNum")));
+		params.put("requestCode", Integer.parseInt((String)params.get("requestCode")));
+		
+		String nowDateStr = (String) params.get("nowDate");
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        params.put("nowDate", sdf.parse(nowDateStr));
+
+		planService.getCheckCancelFee(params);
+
+		return params;
 	}
 	
 	//타통신사 조회
 	@ResponseBody
 	@PostMapping("otherTelecom")
 	public boolean isOtherTelecom(String taPhoneNum, String telecomName) throws Exception{
-		log.error(telecomName);
-		log.error(taPhoneNum);
-		log.error("{}<=======",planService.isOtherTelecom(taPhoneNum, telecomName));
 		return planService.isOtherTelecom(taPhoneNum, telecomName);
 	}
 	
@@ -244,8 +262,6 @@ public class PlanController {
 		mv.setViewName("redirect:./planList");
 		return mv;
 	}
-	
-	
 	
 	// 부가서비스 디테일
 	@GetMapping("ePlanDetail")
@@ -316,7 +332,6 @@ public class PlanController {
 		return mv;
 	}
 	
-	
 	// 부가서비스 추가
 	@GetMapping("ePlanAdd")
 	public ModelAndView e4() throws Exception{
@@ -324,7 +339,6 @@ public class PlanController {
 		mv.setViewName("hworld/ePlanAdd");
 		return mv;
 	}
-	
 	
 	// 부가서비스 수정
 	@GetMapping("ePlanUpdate")
@@ -341,6 +355,5 @@ public class PlanController {
 		mv.setViewName("hworld/planResult");
 		return mv;
 	}
-	
 	
 }

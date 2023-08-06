@@ -121,32 +121,16 @@
                             <c:if test="${map.joinType == 2 || map.joinType == 1}" > <!-- 회선이 없는 경우 : 번호이동 / 신규가입 -->
                                 <label for="phoneNum" class="form-label">휴대폰 번호</label>
                                 <input type="text" class="form-control" id="phoneNum" placeholder="사용할 휴대폰 번호 입력" name="phoneNum">
+                                <div id="checkPhoneNum"></div>
                             </c:if>
                             <c:if test="${map.joinType == 0}" > <!-- 회선이 있는경우 : 기기변경 -->
                                 <label for="phoneNum" class="form-label">휴대폰 번호</label>
                                 <input type="text" class="form-control" id="phoneNum" value="${phoneNum.phoneNum}" name="phoneNum">
+                                <div id="checkPhoneNum"></div>
                             </c:if>
                             </div>
 
-                            <!-- 본인 인증 -->
-                            <!-- <div class="col-md-9">
-                                <label for="valid1" class="form-label">본인 인증</label>
-                                <input type="text" class="form-control" id="valid1" placeholder="이메일 인증">
-                            </div>
-                            
-                            <div class="col-md-3" style="padding-left: 0px;">
-                                <label for="btn1" class="form-label">&nbsp;&nbsp;&nbsp;</label>
-                                <button class="btn btn-solid-default btn-full" id="btn1" style="padding-left: 4px; padding-right: 4px;">인증번호 요청</button>
-                            </div>
-                            
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" id="valid1" placeholder="인증 번호 입력">
-                            </div>
-                            
-                            <div class="col-md-3" style="padding-left: 0px;">
-                                <button class="btn btn-solid-default btn-full" id="btn1" style="padding-left: 4px; padding-right: 4px;">인증번호 확인</button>
-                            </div>
- -->
+                           
                             <div class="col-md-10">
                                 <div id="selectSize" class=" product-description border-product row">
                                     <label for="valid1" class="form-label">수령 방법</label>
@@ -385,6 +369,85 @@ $('#completeForm').click(function(){
     $('#appForm').submit();
     location.href="./orderSuccess";
 })
+
+//유효성 검사
+//전화번호 11자리, 숫자만 입력 + 중복검사까지 ajax로 실행
+$('#phoneNum').on("blur", function() {
+    //숫자만 입력되게 하는 정규식
+    
+    let checkValue = $(this).val().replace(/[^\d]/g, "");
+  
+    $(this).val(checkValue);
+    
+    let length = checkValue.length;
+
+    if(length != 11) {
+        //this.setCustomValidity("전화번호는 11자리여야 합니다.");
+        //alert("전화번호는 11자리여야 합니다.");
+        $('#phoneNum').val("");
+        $('#checkPhoneNum').empty();
+        $('#checkPhoneNum').append('<p class="theme-color mt-1">전화번호는 11자리여야 합니다.</p>');
+    }else{
+	
+        // 주민등록번호 뒷자리 암호화
+        let rrnf = $('#rrnf').val(); 
+        console.log(rrnf);
+        let rrnl = $('#rrnl').val();// 클라이언트에서 입력한 주민등록번호 뒷자리
+        console.log(rrnl);
+        let name = $('#name').val(); 
+        
+        $.ajax({
+            type: 'GET',
+            url: './checkPhoneNum',
+            dataType: 'json',
+            data: {
+                phoneNum: checkValue,
+                rrnf : rrnf,
+                rrnl : rrnl,
+                name : name
+            },
+            success: function(response) {
+                console.log('요청 성공');
+                console.log(response);
+                
+                if (${map.joinType == 2}) {
+                    if (response.result === 'own' || response.result === 'other') {
+                        $('#checkPhoneNum').empty();
+                        $('#checkPhoneNum').append('<p class="theme-color mt-1">해당 번호로는 신규가입이 불가합니다</p>');
+                    } else if (response.result === 'able') {
+                        $('#checkPhoneNum').empty();
+                        $('#checkPhoneNum').append('<p class="theme-color mt-1">사용 가능한 번호입니다</p>');
+                    } else {
+                        $('#checkPhoneNum').empty();
+                    }
+                } else if (${map.joinType == 1}) {
+                    if (response.result === 'own' || response.result ==='able') {
+                        $('#checkPhoneNum').empty();
+                        $('#checkPhoneNum').append('<p class="theme-color mt-1">해당 번호로는 번호이동이 불가합니다</p>');
+                    } else if (response.result === 'other') {
+                        $('#checkPhoneNum').empty();
+                        $('#checkPhoneNum').append('<p class="theme-color mt-1">번호이동이 가능한 번호입니다</p>');
+                    } else {
+                        $('#checkPhoneNum').empty();
+                    }
+                } else {
+                	if (response.result === 'own') {
+                        $('#checkPhoneNum').empty();
+                        $('#checkPhoneNum').append('<p class="theme-color mt-1">기기변경이 가능한 번호입니다 </p>');
+                    } else if (response.result === 'other' || response.result ==='able') {
+                        $('#checkPhoneNum').empty();
+                        $('#checkPhoneNum').append('<p class="theme-color mt-1">해당 번호로는 기기변경이 불가합니다</p>');
+                    } else {
+                        $('#checkPhoneNum').empty();
+                    }
+                }
+            },
+            error: function(error) {
+                console.log('요청 실패');
+            }
+        });
+    }
+});
 
 
 

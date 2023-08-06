@@ -108,33 +108,23 @@
                                         </div>
                                             <h3> ${eplan.extraPlanExplainM} </h3>
                                         </li>
-                                        <li>  
-                                            <div class="container text-center" style="margin-right:-140px; ">
-                                            <div >
-                                                <h2 class="theme-color" >월 <fmt:formatNumber value="${eplan.extraPrice}" pattern="#,###" /> 원</h2> 
+                                        <li style="margin-left:15%;position: relative; top: -20px;">  
+                                            <div class="container text-center" >
+                                            <div  >
+                                               <h2 class="theme-color d-flex justify-content-center" >월 <fmt:formatNumber value="${eplan.extraPrice}" pattern="#,###" /> 원</h2> 
                                                     <span class="label-text">(부가세 포함)</span>
-                                                <div class="" style="margin-top:30px;">
+                                                <div class="" style="margin-top:10px;">
                                             </div>    
                                                 <!-- 신청 모달 버튼  start -->
                                                 <c:if test="${empty map.size() }">
                                                 <div class="product-buttons justify-content-center" >
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#extraJoin" >
-                                                    <span class="btn btn-solid rounded-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;이 부가서비스 신청하기&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 
-                                                </a>
-                                                </div>
-                                                <div class="product-buttons justify-content-center" hidden>
-                                                        <span class="btn btn-solid  rounded-3 disabled">이미 사용중인 부가서비스입니다.</span> 
-                                                </div> 
-                                                </c:if>
-                                                
-                                                <c:if test="${not empty map.size() }">
-                                                <div class="product-buttons justify-content-center" hidden>
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#extraJoin" >
+                                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#extraJoin" >
                                                     <span class="btn btn-solid rounded-3">이 부가서비스 신청하기</span> 
                                                 </a>
                                                 </div>
+                                                </c:if>
+                                                
+                                                <c:if test="${not empty map.size() }">
                                                 <div class="product-buttons justify-content-center">
                                                         <span class="btn btn-solid rounded-3 disabled">이미 사용중인 부가서비스입니다.</span> 
                                                 </div> 
@@ -208,8 +198,8 @@
                                                     <li class="text-start">
                                                     <p>해당 부가서비스는 <br> 월 ${eplan.extraPrice} 원의 유료서비스로,<br> 신청일부터 서비스가 시작되며 요금이 부과됩니다.</p>
                                                         <p>부가서비스 신청 후 해지시 <br>요금은 일괄계산되어 청구금액에 포함됩니다.</p>
-                                                        <input type="text" id="modalPlanNum" name="extraPlanNum">
-                                                        <input type="text" id="modalPlanName" name="extraPlanName">
+                                                        <input type="hidden" id="modalPlanNum" name="extraPlanNum">
+                                                        <input type="hidden" id="modalPlanName" name="extraPlanName">
                                                     </li>
                                                 </ul>
                                             </div>

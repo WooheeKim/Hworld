@@ -126,8 +126,8 @@ public class MyPageService {
 	}
 	
 	
-	//isDuplicatePhoneNum
-	public boolean isDuplicatePhoneNum(String phoneNum) throws Exception{
+	//isChangeableNum
+	public boolean isChangeableNum(String phoneNum) throws Exception{
 		//자회사 검증때 조회됨 : 자회사에 회선있음
 		//자회사 검증때 조회x + 타회사 검증때 조회됨 : 타회사에 회선 있음
 		//자, 타회사 검증때 조회x : 모두 회선 없음
@@ -135,7 +135,7 @@ public class MyPageService {
 		boolean check = false;
 		
 		//자회사 검증
-		String result = myPageDAO.isDuplicatePhoneNum(phoneNum);
+		String result = myPageDAO.isChangeableNum(phoneNum);
 		if(result != null) {
 			//자회사 회선있음
 			check = true;
@@ -144,15 +144,13 @@ public class MyPageService {
 		log.info(" :::::::::::::::::::: service check value 자회사 : {} ", check);
 		
 		//타회사 검증
-		result = myPageDAO.isDuplicatePhoneNumOT(phoneNum);
+		result = myPageDAO.isChangeableNumOT(phoneNum);
 		if(result != null) {
 			//타회사 회선있음
 			check = true;
 			return check;
 		}
 		log.info(" :::::::::::::::::::: service check value 타회사 : {} ", check);
-		
-		
 		
 		
 		return check;

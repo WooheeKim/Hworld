@@ -39,6 +39,7 @@
                                     <p class="fs-3 w-100 text-center">${memberVO.name} 님, <!-- <strong class="fs-2 theme-color">H world</strong>에 오신것을 환영합니다! <br> --> 선택하신 <strong class="fs-2 theme-color">요금상품</strong>으로 <strong class="fs-2 theme-color">요금제 변경</strong>이 완료되었습니다.</p>
                                 </div>
                             </div>
+                            
                             <div class="">
                                 <div class="row mb-5 justify-content-center">
                                     <div class="col-lg-5 text-center">
@@ -46,6 +47,7 @@
                                             <div class="container">
                                                 <button class="btn rounded-pill m-1 default-theme mb-3"> <h6>선택한 요금상품</h6></button>
                                                 <h2 class="fw-bolder">${phoneNum.planName}</h2>
+                                                
                                                 <div class="container">
                                                  <c:set var="phoneNum" value="${phoneNum.phoneNum}" />
 											<c:set var="formattedPhoneNum" value="${fn:substring(phoneNum, 0, 3)}-${fn:substring(phoneNum, 3, 7)}-${fn:substring(phoneNum, 7,11)}" />
@@ -100,7 +102,12 @@ const formattedDateStrings = formattedDates.toLocaleDateString("ko-KR", options)
 
 document.getElementById("nowDate").textContent = formattedDateString;
 document.getElementById("startDate").textContent = formattedDateStrings;
+
+
 </script>
+
+
+
 </body>
 
 </html>

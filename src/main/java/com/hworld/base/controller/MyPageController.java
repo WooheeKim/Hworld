@@ -146,11 +146,11 @@ public class MyPageController {
 	}
 	
 	
-	//isDuplicatePhoneNum
+	//isChangeableNum
 	@ResponseBody
-	@GetMapping("isDuplicatePhoneNum")
-	public boolean isDuplicatePhoneNum(String phoneNum) throws Exception{
-		return myPageService.isDuplicatePhoneNum(phoneNum);
+	@GetMapping("isChangeableNum")
+	public boolean isChangeableNum(String phoneNum) throws Exception{
+		return myPageService.isChangeableNum(phoneNum);
 	}
 	
 	

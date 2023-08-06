@@ -32,6 +32,8 @@ public class MemberVO {
 	private Integer ownCheck;
 	private Date logDate;
 	
+	private String phoneNum;
+	
 	//
 	private List<TelephoneVO> telephoneVOs;
 	private List<PlanVO> planVOs;

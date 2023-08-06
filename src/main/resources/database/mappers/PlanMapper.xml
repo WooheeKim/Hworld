@@ -79,12 +79,25 @@
 		}
 </select>
 
-<!-- 기존 사용중인 요금제 정보 회선번호까지 불러오기 -->
+<!-- 원구매가 공시지원금이었을 경우, 요금제 하향 조정시 발생하는 위약금 안내 프로시저  -->
+<select id="getCheckCancelFee" statementType="CALLABLE" parameterType="hashMap" resultType="hashMap">
+		{
+			CALL calc_cancelPrice (
+			#{serialNum, mode=IN, jdbcType=INTEGER, javaType=INTEGER},
+			#{nowDate, mode=IN, jdbcType=DATE, javaType=DATE},
+			#{requestCode, mode=IN, jdbcType=INTEGER, javaType=INTEGER},
+			#{planNum, mode=IN, jdbcType=VARCHAR, javaType=STRING},
+			#{cancelPrice,mode=OUT, jdbcType=INTEGER, javaType=INTEGER}
+			 )
+		}
+</select>
+
+<!-- 대표회선 기존 사용중인 요금제 정보 회선번호까지 불러오기 -->
 <select id="getBeforePlan" resultType="PlanVO" parameterType="Integer">
-	SELECT P.PLANNUM, P.PLANNAME, P.PLANPRICE, P.DATACAPACITY, M.MEMBERNUM, T.SERIALNUM , T.PHONENUM, T.KINGCHECK FROM PLAN P
+	SELECT P.PLANNUM, P.PLANNAME, P.PLANPRICE, P.DATACAPACITY, M.MEMBERNUM, T.SERIALNUM , T.PHONENUM, T.KINGCHECK, T.CONTRACTDATE, T.EXPIREDATE FROM PLAN P
 	JOIN TELEPHONE T ON T.PLANNUM = P.PLANNUM 
 	JOIN MEMBER M ON T.MEMBERNUM = M.MEMBERNUM
-	WHERE M.MEMBERNUM = #{memberNum}
+	WHERE M.MEMBERNUM = #{memberNum} AND T.KINGCHECK =1
 </select>
 
 <!-- 번호이동 타통신사 조회 -->

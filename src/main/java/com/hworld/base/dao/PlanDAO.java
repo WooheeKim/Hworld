@@ -49,14 +49,14 @@ public interface PlanDAO {
     //요금제 변경 페이지에서 요금제 변경일 체크 
     public BillVO getCheckPlanChange(BillVO billVO) throws Exception;
     
+    //위약금 조회 프로시저 호출
+    public Map<?, ?> getCheckCancelFee(Map<String, Object> checkCancelFee) throws Exception;
+    
     //요금제 변경 후 청구내역 변경되는 프로시저 호출
     public int setPlanChange(BillVO billVO) throws Exception;
     
-    
-    
     //타통신사 조회 
     public String isOtherTelecom(String taPhoneNum, String telecomName) throws Exception;
-    
     
     // 공통코드 정보 가져오고 insert 
     public List<BaseVO> getCommonCode(BaseVO baseVO) throws Exception;
@@ -70,8 +70,6 @@ public interface PlanDAO {
 	
 	// 요금제 삭제
     public int setPlanDisabled(PlanVO planVO) throws Exception;
-    
-    
 
 	// 부가서비스 갯수
 	//public Long getTotalCount(Pager pager) throws Exception;

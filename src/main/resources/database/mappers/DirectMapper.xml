@@ -110,16 +110,79 @@
 		VALUES(#{appNum}, #{name}, #{rrnf}, #{rrnl}, #{address1}, #{address2}, #{address3}, #{planNum}, #{phoneNum}, #{disKind}, 0, NOW(), #{directName}, #{directCode}, #{rrnlOrigin})
 	</insert>
 	
+	
+	<!-- 상품 구매 완료 후 회원 정보 불러오는 -->
+	<select id="getDirectName" resultType="String" parameterType="Integer">
+	SELECT directName FROM APPLICATIONFORM A
+ 	INNER JOIN MEMBER M ON A.NAME = M.NAME AND A.RRNF = M.RRNF AND M.RRNL = A.RRNL
+	WHERE MEMBERNUM = #{memberNum}
+	ORDER BY A.APPNUM DESC
+	LIMIT 1
+	</select>
+	
+	<!-- 신규가입 상품 구매 완료 후 회원 정보 불러오는 -->
+	<select id="getMemberPlan" resultType="PlanVO" parameterType="Integer">
+		SELECT P.PLANNUM, P.PLANNAME, P.PLANPRICE, P.DATACAPACITY, M.MEMBERNUM, T.SERIALNUM , T.PHONENUM, T.KINGCHECK FROM PLAN P
+		JOIN TELEPHONE T ON T.PLANNUM = P.PLANNUM 
+		JOIN MEMBER M ON T.MEMBERNUM = M.MEMBERNUM
+		WHERE M.MEMBERNUM = #{memberNum} 
+		ORDER BY SERIALNUM DESC
+		LIMIT 1;
+	</select>
+	
+	<!-- 번이 / 기변 상품 구매 완료 후 회원 정보 불러오는 -->
+	<!-- <select id="getMemberPlan" resultType="PlanVO" parameterType="Integer">
+		SELECT P.PLANNUM, P.PLANNAME, P.PLANPRICE, P.DATACAPACITY, M.MEMBERNUM, T.SERIALNUM , T.PHONENUM, T.KINGCHECK FROM PLAN P
+		JOIN TELEPHONE T ON T.PLANNUM = P.PLANNUM 
+		JOIN MEMBER M ON T.MEMBERNUM = M.MEMBERNUM
+		WHERE M.MEMBERNUM = #{memberNum} AND T.KINGCHECK = 1
+	</select> -->
+	
+	<update id="setOwnCheck" parameterType="Integer">
+	UPDATE TELEPHONE T
+	INNER JOIN MEMBER M ON M.MEMBERNUM = #{memberNum}
+	SET M.ownCheck = 1
+	WHERE T.PHONENUM IS NOT NULL
+  	AND T.SERIALNUM IS NOT NULL
+	</update>
+	
+	
+	
 	<!-- 신청서VO의 주민번호와 회원 테이블의 주민번호가 일치하는 정보가 있는지 확인 -->
 	<select id="getMemberSearch" parameterType="ApplicationVO" resultType="MemberVO">
 		SELECT MEMBERNUM FROM MEMBER
 		WHERE RRNF = #{rrnf} AND RRNL = #{rrnl}
 	</select>
 	<!-- 번호이동 타통신사 조회 -->
-	<select id="isOtherTelecom" resultType="OtherTelecomVO" parameterType="String">
+	<select id="isOtherTelecom" resultType="String" parameterType="String">
 	SELECT * FROM OTHERTELECOM
-	WHERE TAPHONENUM = #{taPhoneNum} 
+	WHERE TAPHONENUM = #{phoneNum} 
 	</select>
+	
+	<!-- 전화번호 중복 체크 -->
+	<select id="checkPhoneNum" parameterType="String" resultType="String">
+		 SELECT
+        CASE
+            WHEN EXISTS (
+                SELECT T.phoneNum
+                FROM TELEPHONE T
+                INNER JOIN MEMBER M ON T.MEMBERNUM = M.MEMBERNUM
+                WHERE T.PHONENUM = #{phoneNum} AND M.RRNF = #{rrnf} AND M.RRNL = #{rrnl} AND M.NAME=#{name}
+             ) OR EXISTS (
+            SELECT T.phoneNum
+            FROM TELEPHONE T
+            INNER JOIN MEMBER M ON T.MEMBERNUM = M.MEMBERNUM
+            WHERE T.PHONENUM = #{phoneNum} 
+        ) THEN 'own'
+            WHEN EXISTS (
+                SELECT taPhoneNum
+                FROM OTHERTELECOM
+                WHERE taPhoneNum = #{phoneNum}
+            ) THEN 'other'
+            ELSE 'able'
+        END AS phoneNum
+	</select>
+	
 	
 	<!-- 프로시저 호출, memberNum, appNum만 입력해주면 계산해줌 -->
 	<!-- parameter 이름은 바꿔서 넣어도 됨, 단 순서는 지켜야한다. 1=directCode, 2=disKind, 3=planNum, 4=월기기가격, 5=월요금가격 -->
@@ -132,13 +195,6 @@
 		}
 	</insert>
 	
-	<!-- 상품 구매 완료 후 회원 정보 불러오는 -->
-	<select id="getMemberPlan" resultType="PlanVO" parameterType="Integer">
-		SELECT P.PLANNUM, P.PLANNAME, P.PLANPRICE, P.DATACAPACITY, M.MEMBERNUM, T.SERIALNUM , T.PHONENUM, T.KINGCHECK FROM PLAN P
-		JOIN TELEPHONE T ON T.PLANNUM = P.PLANNUM 
-		JOIN MEMBER M ON T.MEMBERNUM = M.MEMBERNUM
-		WHERE M.MEMBERNUM = #{memberNum} AND T.KINGCHECK = 1
-	</select>
 	
 	<!-- 악세사리 상품 디테일 페이지 상품 하나 다중 옵션 리스트 -->
 	<select id="getAccDetail" parameterType="DirectVO" resultType="DirectVO"> 

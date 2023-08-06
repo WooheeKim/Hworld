@@ -101,6 +101,10 @@ public class PlanService {
 		return planDAO.getCheckPlanChange(billVO);
 	}
 	
+	//위약금 조회 프로시저 호출 
+	public Map<?, ?> getCheckCancelFee(Map<String, Object> checkCancelFee) throws Exception{
+		return planDAO.getCheckCancelFee(checkCancelFee);
+	}
 	
 	//요금제 변경 > 청구내역 업데이트 프로시저 호출
 	public int setPlanChange(BillVO billVO) throws Exception{

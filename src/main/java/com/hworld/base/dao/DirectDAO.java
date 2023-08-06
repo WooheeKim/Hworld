@@ -101,12 +101,24 @@ public interface DirectDAO {
 
 	//2.신청서 기반(주민번호)으로 일치하는 회원정보가 있는지 검색 - 앞자리는 세션에서 받아오고 뒷자리 입력해서 검증
 	public MemberVO getMemberSearch(ApplicationVO applicationVO) throws Exception;
+	
 	//프로시저로 회선 테이블에 add
 	public int setTelephoneInitAdd(Map<String, Integer> telephone) throws Exception;
 	
 	//구매완료(가입완료 후 결과안내 창)
 	public PlanVO getMemberPlan(Integer memberNum) throws Exception;
-	//타 통신사 번호 조회
-	public OtherTelecomVO isOtherTelecom(String phoneNum);
 	
+	public String getDirectName(Integer memberNum) throws Exception;
+
+	//타 통신사 번호 조회
+	public String isOtherTelecom(String phoneNum)throws Exception;
+	
+	//기기변경 시 정보 일치 조회 여부
+	public MemberVO getMemberInput (MemberVO memberVO)throws Exception;
+	
+	//휴대폰 번호 사용가능여부 조회 
+	public String checkPhoneNum(String phoneNum, String rrnf, String rrnl, String name)throws Exception;
+	
+	//휴대폰 구매 후 ownCheck 1로 업데이트
+	public int setOwnCheck(Integer memberNum) throws Exception;
 }
