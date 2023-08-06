@@ -65,9 +65,9 @@
 	</select>
 
 	
-	<update id="login" parameterType="MemberVO">
-		UPDATE MEMBER SET LASTTIME = NOW()
-		WHERE EMAIL = #{email}
+	<update id="loginDate" parameterType="MemberVO">
+		UPDATE MEMBER SET LOGDATE = NOW()
+		WHERE EMAIL = #{email} AND PW = #{pw}
 	</update>
 	
 	<!-- 이메일 찾기 -->

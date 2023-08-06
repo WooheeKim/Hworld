@@ -7,7 +7,7 @@
 	
 	<!-- 회원목록 -->
 	<select id="memberList" parameterType="Pager" resultType="MemberVO">
-		SELECT MEMBERNUM, NAME, TEL, EMAIL, RRNF, ADDRESS1, ADDRESS2, ADDRESS3, JOINDATE, MEMBERSTATE, LASTTIME 
+		SELECT MEMBERNUM, NAME, TEL, EMAIL, RRNF, ADDRESS1, ADDRESS2, ADDRESS3, JOINDATE, MEMBERSTATE, LOGDATE
 		FROM MEMBER
 		<include refid="searchMemberList"></include>
 		ORDER BY MEMBERNUM DESC
@@ -15,7 +15,7 @@
 	</select>
 	
 	<sql id="searchMemberList">
-		WHERE MEMBERNUM LIKE CONCAT('%', #{search}, '%') OR NAME LIKE CONCAT('%', #{search}, '%') OR EMAIL LIKE CONCAT('%', #{search}, '%')
+		WHERE MEMBERNUM LIKE CONCAT('%', #{search}, '%') OR NAME LIKE CONCAT('%', #{search}, '%') OR EMAIL LIKE CONCAT('%', #{search}, '%') OR TEL LIKE CONCAT('%', #{search}, '%')
 	</sql>
 
 	<select id="getTotalMember" parameterType="Pager" resultType="Long">
@@ -25,40 +25,29 @@
 	
 	<!-- 회선목록 -->
 	<select id="phoneList" parameterType="Pager" resultMap="TelephoneListResult">
-		SELECT DISTINCT M.MEMBERNUM, M.EMAIL, T.PHONENUM, P.*, T.PLANNUM, T.DIRECTNAME, T.STARTDATE, T.ENDDATE, M.MEMBERSTATE 
-		FROM MEMBER M
-		JOIN TELEPHONE T
- 		ON(M.MEMBERNUM = T.MEMBERNUM)
- 		INNER JOIN PLAN P
+		SELECT DISTINCT M.MEMBERNUM, M.EMAIL, T.PHONENUM, P.PLANNUM, P.PLANNAME, T.DIRECTNAME, T.STARTDATE, T.ENDDATE, M.MEMBERSTATE 
+		FROM TELEPHONE T
+		INNER JOIN PLAN P
  		ON(P.PLANNUM = T.PLANNUM)
+		INNER JOIN MEMBER M
+ 		ON(T.MEMBERNUM = M.MEMBERNUM)
 		<include refid="searchTelephoneList"></include>
- 		ORDER BY MEMBERNUM DESC
-		LIMIT #{startRow}, #{perPage}
-		
-		<!-- SELECT DISTINCT M.MEMBERNUM, M.EMAIL, T.PHONENUM, P.*, T.PLANNUM, T.DIRECTNAME, T.STARTDATE, T.ENDDATE, M.MEMBERSTATE 
-		FROM MEMBER M
-		JOIN TELEPHONE T
- 		ON(M.MEMBERNUM = T.MEMBERNUM)
- 		INNER JOIN PLAN P
- 		ON(P.PLANNUM = T.PLANNUM)
-		<include refid="searchTelephoneList"></include>
- 		ORDER BY MEMBERNUM DESC
-		LIMIT #{startRow}, #{perPage} -->
+ 		ORDER BY M.MEMBERNUM DESC, T.STARTDATE DESC
+		LIMIT #{startRow}, #{perPage}		
 	</select>
-	<resultMap type="MemberVO" id="TelephoneListResult">
-		<id column="memberNum" property="memberNum"/>
-		<result column="EMAIL" property="email"/>
-		<result column="MEMBERSTATE" property="memberState"/>
-  		<collection property="planVOs" javaType="List" ofType="planVO">
-  			<id column="PLANNUM" property="planNum"/>
+	<resultMap type="TelephoneVO" id="TelephoneListResult">
+		<id column="PHONENUM" property="phoneNum"/>  			  		  			
+		<result column="DIRECTNAME" property="directName"/>
+		<result column="STARTDATE" property="startDate"/>
+		<result column="ENDDATE" property="endDate"/>		
+  		<collection property="planVOs" javaType="List" ofType="PlanVO">
+  			<result column="PLANNUM" property="planNum"/>
   			<result column="PLANNAME" property="planName"/>
   		</collection>
-		<collection property="telephoneVOs" javaType="List" ofType="TelephoneVO">
-  			<id column="PHONENUM" property="phoneNum"/>  			
-  			<result column="PLANNUM" property="planNum"/>
-			<result column="DIRECTNAME" property="directName"/>
-			<result column="STARTDATE" property="startDate"/>
-			<result column="ENDDATE" property="endDate"/>  			
+		<collection property="memberVOs" javaType="List" ofType="MemberVO">
+  			<id column="MEMBERNUM" property="memberNum"/>
+			<result column="EMAIL" property="email"/>
+			<result column="MEMBERSTATE" property="memberState"/>  			
   		</collection>
 	</resultMap>
 	
@@ -67,26 +56,16 @@
 	</sql>
 	
 	<select id="getTotalTelephone" parameterType="Pager" resultType="Long">
-		SELECT DISTINCT COUNT(*) FROM MEMBER M
-		LEFT JOIN TELEPHONE T
-		ON(M.MEMBERNUM = T.MEMBERNUM)
+		SELECT DISTINCT COUNT(*) FROM TELEPHONE T
 		INNER JOIN PLAN P
 		ON(T.PLANNUM = P.PLANNUM)
-		<include refid="searchTelephoneList"></include>
+		INNER JOIN MEMBER M
+		ON(T.MEMBERNUM = M.MEMBERNUM)
+		<include refid="searchTelephoneList"></include>		
 	</select>
 	
 	<!-- 주문 목록 -->
 	<select id="orderList" parameterType="Pager" resultMap="OrderListResult">
-		<!-- SELECT P.ORDERNUM , P.MEMBERNUM , M.EMAIL , O.ORDERDATE , O.ORDERSTATE
-		FROM ORDERS O
-		LEFT JOIN MEMBER M
- 		ON(O.MEMBERNUM = M.MEMBERNUM)
- 		INNER JOIN PAY P
- 		ON(O.ORDERNUM = P.ORDERNUM)
- 		<include refid="searchOrderList"></include>
-		ORDER BY O.ORDERDATE DESC
-		LIMIT #{startRow}, #{perPage} -->
-		
 		SELECT O.ORDERNUM , M.MEMBERNUM , M.EMAIL , O.ORDERDATE , O.ORDERSTATE
 		FROM ORDERS O
 		INNER JOIN MEMBER M
@@ -106,7 +85,7 @@
 	</resultMap>
 	
 	<sql id="searchOrderList">
-		WHERE O.ORDERNUM LIKE CONCAT('%', #{search}, '%') OR O.ORDERDATE LIKE CONCAT('%', #{search}, '%') OR M.MEMBERNUM LIKE CONCAT('%', #{search}, '%') OR M.NAME LIKE CONCAT('%', #{search}, '%')
+		WHERE O.ORDERNUM LIKE CONCAT('%', #{search}, '%') OR O.ORDERDATE LIKE CONCAT('%', #{search}, '%') OR M.MEMBERNUM LIKE CONCAT('%', #{search}, '%') OR M.EMAIL LIKE CONCAT('%', #{search}, '%')
 	</sql>
 	
 	<select id="getTotalOrder" parameterType="Pager" resultType="Long">
@@ -116,33 +95,32 @@
 		<include refid="searchOrderList"></include>
 	</select>
 	
-	<!-- 주문 상세 페이지 -->
-	<select id="orderDetail" parameterType="OrderVO" resultMap="orderDetailResult">
-		SELECT DISTINCT O.ORDERNUM, O.ORDERDATE, O.ORDERADDRESS1, O.ORDERADDRESS2, O.ORDERADDRESS3, O.ORDERRECEIVER, O.ORDERTELNUM, D.DIRECTNAME, O2.ORDERAMOUNT, O2.DIRECTCODE, D.DIRECTPRICE
-		FROM ORDERS O
-		INNER JOIN ORDERDIRECT O2
-		ON(O.ORDERNUM = O2.ORDERNUM)
+	<select id="orderDetail" resultMap="orderDetailResult"> <!-- parameterType="OrderVO" -->
+		SELECT DISTINCT O.ORDERNUM, O.ORDERDATE, O.ORDERADDRESS1, O.ORDERADDRESS2, O.ORDERADDRESS3, O.ORDERRECEIVER, O.ORDERTELNUM, O2.ORDERAMOUNT, O2.DIRECTCODE, D.DIRECTNAME, D.DIRECTPRICE
+		FROM ORDERDIRECT O2
 		LEFT JOIN DIRECT D
 		ON(O2.DIRECTCODE = D.DIRECTCODE)
+		INNER JOIN ORDERS O
+		ON(O2.ORDERNUM  = O.ORDERNUM)
 		WHERE O.ORDERNUM = #{orderNum} 
 	</select>
-	<resultMap type="OrderVO" id="orderDetailResult">
-		<id column="ORDERNUM" property="orderNum"/>
-		<result column="ORDERDATE" property="orderDate"/>
-		<result column="ORDERADDRESS1" property="orderAddress1"/>
-		<result column="ORDERADDRESS2" property="orderAddress2"/>
-		<result column="ORDERADDRESS3" property="orderAddress3"/>
-		<result column="ORDERRECEIVER" property="orderReceiver"/>
-		<result column="ORDERTELNUM" property="orderTelNum"/>
-		<collection property="orderDirectVOs" javaType="List" ofType="OrderDirectVO">
-			<result column="ORDERNUM" property="orderNum"/>
-  			<result column="DIRECTCODE" property="directCode"/>
-  			<result column="ORDERAMOUNT" property="orderAmount"/>
-  		</collection>  		
+	<resultMap type="OrderDirectVO" id="orderDetailResult">
+		<!-- <result column="DIRECTCODE" property="directCode"/> -->
+		<result column="ORDERNUM" property="orderNum"/>
+		<result column="ORDERAMOUNT" property="orderAmount"/>
+		<collection property="orderVOs" javaType="List" ofType="OrderVO">
+			<id column="ORDERNUM" property="orderNum"/>
+			<result column="ORDERDATE" property="orderDate"/>
+			<result column="ORDERADDRESS1" property="orderAddress1"/>
+			<result column="ORDERADDRESS2" property="orderAddress2"/>
+			<result column="ORDERADDRESS3" property="orderAddress3"/>
+			<result column="ORDERRECEIVER" property="orderReceiver"/>
+			<result column="ORDERTELNUM" property="orderTelNum"/>
+  		</collection>
   		<collection property="directVOs" javaType="List" ofType="DirectVO">
   			<id column="DIRECTCODE" property="directCode"/>
   			<result column="DIRECTNAME" property="directName"/>
-  			<result column="DIRECTPRICE" property="directPrice"/>
+  			<result column="DIRECTPRICE" property="directPrice"/>  			
   		</collection>
 	</resultMap>
 	
@@ -248,7 +226,7 @@
 	<select id="getTotalPI" parameterType="Pager" resultType="Long">
 		SELECT COUNT(DISTINCT NUM) 
 		FROM QNA Q
-		LEFT JOIN DIRECT D 
+		INNER JOIN DIRECT D 
 	    ON (D.DIRECTCODE LIKE CONCAT('%', Q.SLICEDCODE, '%'))
 	    JOIN MEMBER M 
 	    ON (Q.MEMBERNUM = M.MEMBERNUM )
@@ -380,7 +358,7 @@
 	
 	<select id="getTotalUL" parameterType="Pager" resultType="Long">
 		SELECT COUNT(*) FROM PAYMENTDETAILS P
-		LEFT JOIN TELEPHONE T
+		INNER JOIN TELEPHONE T
 	    ON (P.serialNum  = T.SERIALNUM)	    
 		<include refid="unpaidListSearch"></include>
 	</select>

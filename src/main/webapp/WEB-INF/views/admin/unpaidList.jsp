@@ -6,16 +6,37 @@
 
 <head>
 	<meta charset="UTF-8">
-     <c:import url="adminStyle.jsp"></c:import>  
+     <c:import url="adminStyle.jsp"></c:import>
+     <style>
+    	/* 미납 */
+    	.state-withdrawal {
+    		background-color:#F6CECE;
+    		color:#e22454;
+    		padding:5px;
+    		border-radius:5px;
+    		font-size:12px;
+    		font-weight:700;
+    		position:relative;
+    		width:80px;
+    	}    	
+    	/* 납부 */
+    	.state-normal {
+    		background-color:#E0F8E6;
+    		color:#088A08;
+    		padding:5px;
+    		border-radius:5px;
+    		font-size:12px;
+    		font-weight:700;
+    		position:relative;
+    		width:80px;
+    	}    	
+    </style>
 </head>
 
 <body>
-    <c:import url="adminHeader.jsp"></c:import>  
-
-            <!-- Invoice table Start -->
+<c:import url="adminHeader.jsp"></c:import>           
             <div class="page-body">
-                <div class="title-header title-header-1">
-                    
+                <div class="title-header title-header-1">                    
                     <h5>미납 목록</h5>
                     <div class="col-lg-6 col-md-8 mx-6 d-flex justify-content-end">
                         <div class="search-bar">
@@ -48,7 +69,6 @@
                                                         <th><b>미납 월</b> <!-- <i class="fa fa-fw fa-sort"></i> --></th>
                                                         <th><b>미납금액</b> <!-- <i class="fa fa-fw fa-sort"></i> --></th>
                                                         <th><b>납부유무</b> <!-- <i class="fa fa-fw fa-sort"></i> --></th>
-
                                                     </tr>
                                                 </thead>
 
@@ -99,16 +119,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- Container-fluid Ends-->
- <c:import url="adminFooter.jsp"></c:import>  
-            </div>
-            <!-- Invoice table End -->
-        </div>
-        <!-- Page Body End-->
-
-   
-    </div>
-    <!-- page-wrapper end-->
+            </div>            
+            
+	<c:import url="adminFooter.jsp"></c:import>  
 
     <!-- latest js -->
     <script src="/admin/js/jquery-3.6.0.min.js"></script>

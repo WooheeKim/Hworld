@@ -3,11 +3,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-
     <!-- tap on top start -->
-    <div class="tap-top">
+    <!-- <div class="tap-top">
         <span class="lnr lnr-chevron-up"></span>
-    </div>
+    </div> -->
     <!-- tap on tap end -->
 
     <!-- page-wrapper Start-->
@@ -18,8 +17,8 @@
                 <div class="header-logo-wrapper col-auto p-0">
                     <div class="logo-wrapper">
                         <a href="index.html">
-                            <img class="img-fluid main-logo" src="/admin/images/logo/logo.png" alt="logo">
-                            <img class="img-fluid white-logo" src="/admin/images/logo/logo-white.png" alt="logo">
+                            <!-- <img class="img-fluid main-logo" src="/admin/images/logo/logo.png" alt="logo">
+                            <img class="img-fluid white-logo" src="/admin/images/logo/logo-white.png" alt="logo"> -->
                         </a>
                     </div>
                     <div class="toggle-sidebar">

@@ -30,7 +30,7 @@ public class MemberVO {
 	private Integer adminCheck;
 	private String tel;
 	private Integer ownCheck;
-	private Date lastTime;
+	private Date logDate;
 	
 	//
 	private List<TelephoneVO> telephoneVOs;

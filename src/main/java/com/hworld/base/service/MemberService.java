@@ -147,6 +147,10 @@ public class MemberService {
 		return memberDAO.getMemberLogin(memberVO);
 	}
 	
+	public void loginDate(MemberVO memberVO) throws Exception {
+		memberDAO.loginDate(memberVO);
+	}
+	
 	public int getMemberLogout(MemberVO memberVO) throws Exception {
 		return memberDAO.getMemberLogout(memberVO);
 	}

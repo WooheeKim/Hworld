@@ -36,5 +36,7 @@ public class TelephoneVO {
 	private PlanVO planVO;
 	private MemberVO memberVO;
 	private List<ExtraPlanVO> extraPlanVOs;
+	private List<PlanVO> planVOs;
+	private List<MemberVO> memberVOs;
 	
 }	

@@ -27,7 +27,9 @@ public class OrderDirectVO {
     
     private DirectVO directVO;
     
+    private List<OrderVO> orderVOs;
     
+    private List<DirectVO> directVOs;
     
 //    public void initTotal() {
 //		this.totalPrice = this.onePrice * this.orderAmount;

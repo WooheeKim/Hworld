@@ -36,6 +36,8 @@ public interface MemberDAO {
 	
 	public MemberVO getMemberLogin(MemberVO memberVO) throws Exception;
 	
+	public void loginDate(MemberVO memberVO) throws Exception;
+	
 	public int getMemberLogout(MemberVO memberVO) throws Exception;
 	
 //	public MemberVO emailSearch(MemberVO memberVO) throws Exception;
