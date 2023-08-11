@@ -95,6 +95,7 @@
 		<include refid="searchOrderList"></include>
 	</select>
 	
+	<!-- 주문 상세 -->
 	<select id="orderDetail" resultMap="orderDetailResult"> <!-- parameterType="OrderVO" -->
 		SELECT DISTINCT O.ORDERNUM, O.ORDERDATE, O.ORDERADDRESS1, O.ORDERADDRESS2, O.ORDERADDRESS3, O.ORDERRECEIVER, O.ORDERTELNUM, O2.ORDERAMOUNT, O2.DIRECTCODE, D.DIRECTNAME, D.DIRECTPRICE
 		FROM ORDERDIRECT O2

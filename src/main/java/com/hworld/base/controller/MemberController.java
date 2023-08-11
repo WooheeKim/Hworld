@@ -328,15 +328,15 @@ public class MemberController {
 	}
 	
 	// 로그아웃(Get)
-//	@GetMapping("logout")
-//	public String getMemberLogout(HttpServletRequest request) throws Exception {
-//		
-//		HttpSession session = request.getSession();
-//		
-//		session.invalidate();
-//		
-//		return "redirect:/";
-//	} 
+	@GetMapping("logout")
+	public String getMemberLogout(HttpServletRequest request) throws Exception {
+		
+		HttpSession session = request.getSession();
+		
+		session.invalidate();
+		
+		return "redirect:/";
+	} 
 
 	
 	// 회원가입 완료 페이지(Get)
